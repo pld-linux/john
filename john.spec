@@ -3,25 +3,27 @@ Summary(pl):	£amacz hase³
 Name:		john
 Version:	1.6
 Release:	4
-Copyright:	GPL
+License:	GPL
 Group:		Utilities/System
 Group(pl):	Narzêdzia/System
-Source:		http://www.openwall.com/john//%{name}-%{version}.tar.gz
+Source0:	http://www.openwall.com/john//%{name}-%{version}.tar.gz
 Patch0:		%{name}-%{version}.PLD.diff
 Patch1:		%{name}-%{version}.ini.diff
 Patch2:		%{name}-%{version}.makefile.diff
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
-John the Ripper is a password cracker, currently available for UNIX, DOS,
-WinNT/Win95. Its primary purpose is to detect weak UNIX passwords. It has
-been tested with Linux x86/Alpha/SPARC, FreeBSD x86, OpenBSD x86, Solaris
-2.x SPARC and x86, Digital UNIX, AIX, HP-UX, and IRIX.
-  
+John the Ripper is a password cracker, currently available for UNIX,
+DOS, WinNT/Win95. Its primary purpose is to detect weak UNIX
+passwords. It has been tested with Linux x86/Alpha/SPARC, FreeBSD x86,
+OpenBSD x86, Solaris 2.x SPARC and x86, Digital UNIX, AIX, HP-UX, and
+IRIX.
+
 %description -l pl
-John The Ripper jest "³amaczem" hase³ dostêpnym dla systemów UNIX, DOS,
-WinNT/Win95. G³ównym jego zadaniem jest wykrywanie "s³abych" hase³.
-  
+John The Ripper jest "³amaczem" hase³ dostêpnym dla systemów UNIX,
+DOS, WinNT/Win95. G³ównym jego zadaniem jest wykrywanie "s³abych"
+hase³.
+
 %prep
 %setup -q
 %patch0 -p1
