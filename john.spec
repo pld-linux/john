@@ -66,15 +66,3 @@ rm -rf $RPM_BUILD_ROOT
 
 %dir %{_libdir}/john
 %{_libdir}/john/*
-
-%changelog
-* Mon Apr 26 1999 Micha³ Kuratczyk <kura@pld.org.pl>
-  [1.6-3]
-- gzipping documentation instead bzipping
-- sloted BuildRoot into PLD standard
-
-* Wed Dec 09 1998 Arkadiusz Mi¶kiewicz <misiek@misiek.eu.org>
-- added ini patch.
-
-* Sun Oct 06 1998 Arkadiusz Mi¶kiewicz <misiek@misiek.eu.org>
-- initial rpm release.
