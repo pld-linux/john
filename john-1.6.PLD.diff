@@ -6,7 +6,7 @@ diff -urN john-1.6.orig/run/john.ini john-1.6/run/john.ini
  [Options]
  # Wordlist file name, to be used in batch mode
 -Wordfile = ~/password.lst
-+Wordfile = /usr/dict/linux.words
++Wordfile = /usr/share/dict/words
  # Use idle cycles only
  Idle = N
  # Crash recovery file saving delay in seconds
@@ -117,7 +117,7 @@ diff -urN john-1.6.orig/src/params.h john-1.6/src/params.h
 +#define LOG_NAME			"~/.john.pot"
 +#define CFG_NAME			"/usr/lib/john/john.ini"
 +#define RECOVERY_NAME			"~/.john.restore"
-+#define WORDLIST_NAME			"/usr/dict/linux.words"
++#define WORDLIST_NAME			"/usr/share/dict/words"
  
  /*
   * Configuration file section names.
