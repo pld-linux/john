@@ -2,7 +2,7 @@ Summary:	Password cracker
 Summary(pl):	£amacz hase³
 Name:		john
 Version:	1.6
-Release:	3
+Release:	4
 Copyright:	GPL
 Group:		Utilities/System
 Group(pl):	Narzêdzia/System
@@ -46,7 +46,7 @@ fi
 	
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT/usr/{bin,lib/john}
+install -d $RPM_BUILD_ROOT{%{_bindir},%{_libdir}/john}
 install run/*.chr $RPM_BUILD_ROOT%{_libdir}/john
 install run/john.ini $RPM_BUILD_ROOT%{_libdir}/john
 install run/john $RPM_BUILD_ROOT%{_bindir}
