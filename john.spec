@@ -8,10 +8,10 @@ Summary:	Password cracker
 Summary(pl):	£amacz hase³
 Name:		john
 Version:	1.6
-Release:	5
+Release:	6
 License:	GPL
 Group:		Applications/System
-Source0:	http://www.openwall.com/john//%{name}-%{version}.tar.gz
+Source0:	http://www.openwall.com/john/%{name}-%{version}.tar.gz
 Patch0:		%{name}-%{version}.PLD.diff
 Patch1:		%{name}-%{version}.ini.diff
 Patch2:		%{name}-%{version}.makefile.diff
@@ -67,6 +67,7 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_bindir},%{_libdir}/john}
 install run/{*.chr,john.ini} $RPM_BUILD_ROOT%{_libdir}/john
 install run/john $RPM_BUILD_ROOT%{_bindir}
+rm -f doc/INSTALL
 
 gzip -9nf doc/* run/mailer
 
