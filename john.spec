@@ -61,7 +61,7 @@ COPT="%{rpmcflags}"
 	%endif
 %endif
 
-%{__make} OPT="$COPT" $TARG
+%{__make} OPT="$COPT" CC="%{__cc}" $TARG
 
 %install
 rm -rf $RPM_BUILD_ROOT
