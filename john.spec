@@ -11,7 +11,7 @@ Summary:	Password cracker
 Summary(pl):	£amacz hase³
 Name:		john
 Version:	1.6.34
-Release:	1
+Release:	2
 License:	GPL
 Group:		Applications/System
 Source0:	http://www.openwall.com/john/%{name}-1.6.tar.gz
