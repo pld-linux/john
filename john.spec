@@ -49,11 +49,11 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/usr/{bin,lib/john}
 install run/*.chr $RPM_BUILD_ROOT%{_libdir}/john
 install run/john.ini $RPM_BUILD_ROOT%{_libdir}/john
-install run/john $RPM_BUILD_ROOT/usr/bin
+install run/john $RPM_BUILD_ROOT%{_bindir}
 
 gzip -9nf doc/* run/mailer
 
-cd $RPM_BUILD_ROOT/usr/bin
+cd $RPM_BUILD_ROOT%{_bindir}
 ln -s john unafs; ln -s john unique; ln -s john unshadow
 
 %clean
@@ -62,7 +62,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc doc/* run/mailer.gz
-%attr(755,root,root) /usr/bin/*
+%attr(755,root,root) %{_bindir}/*
 
 %dir %{_libdir}/john
 %{_libdir}/john/*
