@@ -6,8 +6,7 @@ Release:	4
 Copyright:	GPL
 Group:		Utilities/System
 Group(pl):	Narzêdzia/System
-URL:		http://www.false.com/security/john/
-Source:		%{name}-%{version}.tar.gz
+Source:		http://www.openwall.com/john//%{name}-%{version}.tar.gz
 Patch0:		%{name}-%{version}.PLD.diff
 Patch1:		%{name}-%{version}.ini.diff
 Patch2:		%{name}-%{version}.makefile.diff
