@@ -27,7 +27,8 @@ IRIX.
 %description -l pl
 John The Ripper jest "³amaczem" hase³ dostêpnym dla systemów UNIX,
 DOS, WinNT/Win95. G³ównym jego zadaniem jest wykrywanie "s³abych"
-hase³.
+hase³. By³ testowany z Linux x86/Alpha/SPARC, FreeBSD x86, OpenBSD x86,
+Solaris 2.x SPARC i x86, Digital UNIX, AIX, HP-UX oraz IRIX.
 
 %prep
 %setup -q
