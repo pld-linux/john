@@ -66,7 +66,11 @@ COPT="%{rpmcflags}"
 		%ifarch sparc64
 			TARG=linux-sparc
 		%else
-			TARG=generic
+			%ifarch amd64
+				TARG=linux-x86-64
+			%else
+				TARG=generic
+			%endif	
 		%endif
 	%endif
 %endif
