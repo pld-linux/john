@@ -11,8 +11,6 @@ Version:	1.6
 Release:	5
 License:	GPL
 Group:		Applications/System
-Group(de):	Applikationen/System
-Group(pl):	Aplikacje/System
 Source0:	http://www.openwall.com/john//%{name}-%{version}.tar.gz
 Patch0:		%{name}-%{version}.PLD.diff
 Patch1:		%{name}-%{version}.ini.diff
