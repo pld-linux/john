@@ -4,18 +4,22 @@
 # Optimization must be chosen at compile time :(
 # Maybe some patch...? But not yet.
 #
+%ifarch athlon
+%define _with_mmx 1
+%endif
 Summary:	Password cracker
 Summary(pl):	£amacz hase³
 Name:		john
-Version:	1.6
-Release:	6
+Version:	1.6.34
+Release:	1
 License:	GPL
 Group:		Applications/System
-Source0:	http://www.openwall.com/john/%{name}-%{version}.tar.gz
+Source0:	http://www.openwall.com/john/%{name}-1.6.tar.gz
 # Source0-md5:	aae782f160041b2bdc624b0a84054e32
-Patch0:		%{name}-%{version}.PLD.diff
-Patch1:		%{name}-%{version}.ini.diff
-Patch2:		%{name}-%{version}.makefile.diff
+Patch0:		%{name}-%{version}.patch
+Patch1:		%{name}-1.6.PLD.diff
+Patch2:		%{name}-1.6.ini.diff
+Patch3:		%{name}-1.6.makefile.diff
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -32,10 +36,11 @@ hase³. By³ testowany z Linux x86/Alpha/SPARC, FreeBSD x86, OpenBSD x86,
 Solaris 2.x SPARC i x86, Digital UNIX, AIX, HP-UX oraz IRIX.
 
 %prep
-%setup -q
+%setup -q -n %{name}-1.6
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
+#%patch2 -p1
+#%patch3 -p1
 
 %build
 cd src
@@ -67,8 +72,9 @@ COPT="%{rpmcflags}"
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_bindir},%{_libdir}/john}
-install run/{*.chr,john.ini} $RPM_BUILD_ROOT%{_libdir}/john
+install run/{*.chr,john.conf} $RPM_BUILD_ROOT%{_libdir}/john
 install run/john $RPM_BUILD_ROOT%{_bindir}
+
 rm -f doc/INSTALL
 
 cd $RPM_BUILD_ROOT%{_bindir}
