@@ -39,7 +39,7 @@ hase³.
 
 %build
 cd src
-COPT="%{?debug:-O0 -g}%{!?debug:$RPM_OPT_FLAGS}"
+COPT="%{rpmcflags}"
 
 # bleh... MMX code must be chosen at compile time :(
 # cannot use MMX for generic i586 nor i686 (Pentium/Pentium Pro have no MMX)
