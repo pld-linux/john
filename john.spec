@@ -14,7 +14,7 @@ Version:	1.6.37
 Release:	2
 License:	GPL
 Group:		Applications/System
-Source0:	http://www.openwall.com/john/%{name}-%{version}.tar.gz
+Source0:	http://www.openwall.com/john/a/%{name}-%{version}.tar.gz
 # Source0-md5:	9403233b640927295c05b0564ff1f678
 # needed for docs and charset files
 Source1:	http://www.openwall.com/john/%{name}-1.6.tar.gz
