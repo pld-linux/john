@@ -22,6 +22,7 @@ Source1:	http://www.openwall.com/john/%{name}-1.6.tar.gz
 Patch0:		%{name}-1.6.PLD.diff
 Patch1:		%{name}-1.6.ini.diff
 Patch2:		%{name}-1.6.makefile.diff
+Patch3:		ftp://ftp.banquise.net/users/bandecon/john-patch/john-1.6.37-bigpatch-11.diff.gz
 URL:		http://www.openwall.com/john/
 BuildRequires:	sed >= 4.0
 Requires:	words
@@ -46,6 +47,7 @@ Solaris 2.x SPARC i x86, Digital UNIX, AIX, HP-UX oraz IRIX.
 #%patch1 -p1
 #%patch2 -p1
 # or move it to /var maybe?
+%patch3 -p1
 sed -i -e 's,/usr/lib,%{_libdir},' src/params.h run/john.conf
 
 %build
