@@ -23,6 +23,7 @@ Patch0:		%{name}-1.6.PLD.diff
 Patch1:		%{name}-1.6.ini.diff
 Patch2:		%{name}-1.6.makefile.diff
 URL:		http://www.openwall.com/john/
+Requires:	words
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
