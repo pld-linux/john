@@ -1,6 +1,6 @@
 #
 # Conditional build:
-# bcond_on_mmx	- MMX optimization
+# _with_mmx	- MMX optimization
 # Optimization must be chosen at compile time :(
 # Maybe some patch...? But not yet.
 #
@@ -45,7 +45,7 @@ COPT="%{rpmcflags}"
 # cannot use MMX for generic i586 nor i686 (Pentium/Pentium Pro have no MMX)
 # K6 optimization exists only in Makefile
 %ifarch %{ix86}
-	%if %{?bcond_on_mmx:1}%{!?bcond_on_mmx:0}
+	%if %{?_with_mmx:1}%{!?_with_mmx:0}
 		TARG=linux-x86-mmx-elf
 	%else
 		TARG=linux-x86-any-elf
