@@ -12,6 +12,7 @@ Release:	6
 License:	GPL
 Group:		Applications/System
 Source0:	http://www.openwall.com/john/%{name}-%{version}.tar.gz
+# Source0-md5:	aae782f160041b2bdc624b0a84054e32
 Patch0:		%{name}-%{version}.PLD.diff
 Patch1:		%{name}-%{version}.ini.diff
 Patch2:		%{name}-%{version}.makefile.diff
