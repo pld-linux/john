@@ -5,7 +5,10 @@
 # Maybe some patch...? But not yet.
 #
 %ifarch athlon
-%define with_mmx 1
+%define		with_mmx	1
+%endif
+%ifnarch %{x86}
+%undefine	with_mmx
 %endif
 Summary:	Password cracker
 Summary(pl):	£amacz hase³
@@ -51,22 +54,19 @@ COPT="%{rpmcflags}"
 # bleh... MMX code must be chosen at compile time :(
 # cannot use MMX for generic i586 nor i686 (Pentium/Pentium Pro have no MMX)
 # K6 optimization exists only in Makefile
+
+TARG=generic
+%if %{with mmx}
+	TARG=linux-x86-mmx-elf
+%endif
 %ifarch %{ix86}
-	%if %{with mmx}
-		TARG=linux-x86-mmx-elf
-	%else
-		TARG=linux-x86-any-elf
-	%endif
-%else
-	%ifarch alpha
-		TARG=linux-alpha
-	%else
-		%ifarch sparc sparc64
-			TARG=linux-sparc
-		%else
-			TARG=generic
-		%endif
-	%endif
+	TARG=linux-x86-any-elf
+%endif
+%ifarch alpha
+	TARG=linux-alpha
+%endif
+%ifarch sparc sparc64
+	TARG=linux-sparc
 %endif
 
 %{__make} $TARG \
