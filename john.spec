@@ -22,6 +22,7 @@ Source1:	http://www.openwall.com/john/%{name}-1.6.tar.gz
 Patch0:		%{name}-1.6.PLD.diff
 Patch1:		%{name}-1.6.ini.diff
 Patch2:		%{name}-1.6.makefile.diff
+URL:		http://www.openwall.com/john/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
