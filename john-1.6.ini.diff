@@ -1,0 +1,35 @@
+diff -urN john-1.6.orig/src/config.c john-1.6/src/config.c
+--- john-1.6.orig/src/config.c	Thu Dec  3 01:29:50 1998
++++ john-1.6/src/config.c	Wed Dec  9 13:08:02 1998
+@@ -7,6 +7,9 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include <ctype.h>
++#include <pwd.h>
++#include <sys/types.h>
++#include <unistd.h>
+ 
+ #include "misc.h"
+ #include "params.h"
+@@ -117,11 +120,18 @@
+ 	FILE *file;
+ 	char line[LINE_BUFFER_SIZE];
+ 	int number;
++	char name2[100];
++	struct passwd *haslo;
+ 
++	haslo = getpwuid(getuid());
++	sprintf(name2, "%s/.john.ini", haslo->pw_dir);
+ 	if (cfg_database) return;
+-
+-	if (!(file = fopen(path_expand(name), "r")))
+-		pexit("fopen: %s", path_expand(name));
++	
++	if (!(file = fopen(name2, "r")))
++	{
++		if (!(file = fopen(path_expand(name), "r")))
++		pexit("fopen: ~/.john.ini or %s", path_expand(name));
++	}
+ 
+ 	number = 0;
+ 	while (fgetl(line, sizeof(line), file))
