@@ -11,7 +11,7 @@ Summary:	Password cracker
 Summary(pl):	£amacz hase³
 Name:		john
 Version:	1.6.37
-Release:	6
+Release:	7
 License:	GPL
 Group:		Applications/System
 Source0:	http://www.openwall.com/john/a/%{name}-%{version}.tar.gz
@@ -41,10 +41,11 @@ Solaris 2.x SPARC i x86, Digital UNIX, AIX, HP-UX oraz IRIX.
 
 %prep
 %setup -q -a1
-# -n %{name}-1.6
 %patch0 -p1
 #%patch1 -p1
 #%patch2 -p1
+# or move it to /var maybe?
+sed -i -e 's,/usr/lib,%{_libdir},' src/params.h run/john.conf
 
 %build
 cd src
