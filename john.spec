@@ -70,8 +70,6 @@ install run/{*.chr,john.ini} $RPM_BUILD_ROOT%{_libdir}/john
 install run/john $RPM_BUILD_ROOT%{_bindir}
 rm -f doc/INSTALL
 
-gzip -9nf doc/* run/mailer
-
 cd $RPM_BUILD_ROOT%{_bindir}
 ln -sf john unafs
 ln -sf john unique
@@ -82,6 +80,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc doc/* run/mailer.gz
+%doc doc/* run/mailer
 %attr(755,root,root) %{_bindir}/*
 %{_libdir}/john
