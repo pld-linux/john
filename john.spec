@@ -1,25 +1,27 @@
 #
 # Conditional build:
-# _with_mmx	- MMX optimization
+%bcond_with	mmx	# MMX optimization
 # Optimization must be chosen at compile time :(
 # Maybe some patch...? But not yet.
 #
 %ifarch athlon
-%define _with_mmx 1
+%define with_mmx 1
 %endif
 Summary:	Password cracker
 Summary(pl):	£amacz hase³
 Name:		john
 Version:	1.6.37
-Release:	1
+Release:	2
 License:	GPL
 Group:		Applications/System
-Source0:	http://www.openwall.com/john/%{name}-1.6.tar.gz
-# Source0-md5:	aae782f160041b2bdc624b0a84054e32
-Patch0:		%{name}-1.6.34.patch
-Patch1:		%{name}-1.6.PLD.diff
-Patch2:		%{name}-1.6.ini.diff
-Patch3:		%{name}-1.6.makefile.diff
+Source0:	http://www.openwall.com/john/%{name}-%{version}.tar.gz
+# Source0-md5:	9403233b640927295c05b0564ff1f678
+# needed for docs and charset files
+Source1:	http://www.openwall.com/john/%{name}-1.6.tar.gz
+# Source1-md5:	aae782f160041b2bdc624b0a84054e32
+Patch0:		%{name}-1.6.PLD.diff
+Patch1:		%{name}-1.6.ini.diff
+Patch2:		%{name}-1.6.makefile.diff
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -36,11 +38,11 @@ hase³. By³ testowany z Linux x86/Alpha/SPARC, FreeBSD x86, OpenBSD x86,
 Solaris 2.x SPARC i x86, Digital UNIX, AIX, HP-UX oraz IRIX.
 
 %prep
-%setup -q -n %{name}-1.6
+%setup -q -a1
+# -n %{name}-1.6
 %patch0 -p1
-%patch1 -p1
+#%patch1 -p1
 #%patch2 -p1
-#%patch3 -p1
 
 %build
 cd src
@@ -50,7 +52,7 @@ COPT="%{rpmcflags}"
 # cannot use MMX for generic i586 nor i686 (Pentium/Pentium Pro have no MMX)
 # K6 optimization exists only in Makefile
 %ifarch %{ix86}
-	%if %{?_with_mmx:1}%{!?_with_mmx:0}
+	%if %{with mmx}
 		TARG=linux-x86-mmx-elf
 	%else
 		TARG=linux-x86-any-elf
@@ -67,12 +69,14 @@ COPT="%{rpmcflags}"
 	%endif
 %endif
 
-%{__make} OPT="$COPT" CC="%{__cc}" $TARG
+%{__make} $TARG \
+	OPT="$COPT" \
+	CC="%{__cc}"
 
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_bindir},%{_libdir}/john}
-install run/{*.chr,john.conf} $RPM_BUILD_ROOT%{_libdir}/john
+install run/john.conf john-1.6/run/*.chr $RPM_BUILD_ROOT%{_libdir}/john
 install run/john $RPM_BUILD_ROOT%{_bindir}
 
 rm -f doc/INSTALL
@@ -87,6 +91,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc doc/* run/mailer
+%doc doc/* john-1.6/doc/{CONFIG,EXAMPLES,EXTERNAL,FAQ,MODES,NEWS,OPTIONS,RULES} run/mailer
 %attr(755,root,root) %{_bindir}/*
 %{_libdir}/john
