@@ -2,16 +2,16 @@ Summary:	Password cracker
 Summary(pl):	£amacz hase³
 Name:		john
 Version:	1.6
-Release:	2d
+Release:	3
 Copyright:	GPL
 Group:		Utilities/System
 Group(pl):	Narzêdzia/System
+URL:		http://www.false.com/security/john/
 Source:		%{name}-%{version}.tar.gz
 Patch0:		%{name}-%{version}.PLD.diff
 Patch1:		%{name}-%{version}.ini.diff
 Patch2:		%{name}-%{version}.makefile.diff
-URL:		http://www.false.com/security/john/
-Buildroot:	/tmp/%{name}-%{version}-buildroot
+Buildroot:	/tmp/%{name}-%{version}-root
 
 %description
 John the Ripper is a password cracker, currently available for UNIX, DOS,
@@ -46,13 +46,12 @@ fi
 	
 %install
 rm -rf $RPM_BUILD_ROOT
-
 install -d $RPM_BUILD_ROOT/usr/{bin,lib/john}
 install run/*.chr $RPM_BUILD_ROOT/usr/lib/john
 install run/john.ini $RPM_BUILD_ROOT/usr/lib/john
 install run/john $RPM_BUILD_ROOT/usr/bin
 
-bzip2 -9 doc/* run/mailer
+gzip -9nf doc/* run/mailer
 
 cd $RPM_BUILD_ROOT/usr/bin
 ln -s john unafs; ln -s john unique; ln -s john unshadow
@@ -62,14 +61,18 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc doc/* run/mailer.bz2
-
+%doc doc/* run/mailer.gz
 %attr(755,root,root) /usr/bin/*
 
 %dir /usr/lib/john
 /usr/lib/john/*
 
 %changelog
+* Mon Apr 26 1999 Micha³ Kuratczyk <kura@pld.org.pl>
+  [1.6-3]
+- gzipping documentation instead bzipping
+- sloted BuildRoot into PLD standard
+
 * Wed Dec 09 1998 Arkadiusz Mi¶kiewicz <misiek@misiek.eu.org>
 - added ini patch.
 
