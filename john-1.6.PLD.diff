@@ -1,16 +1,16 @@
-diff -ruN john-1.6./run/john.conf john-1.6/run/john.conf
---- john-1.6./run/john.conf	2003-07-12 12:06:08.000000000 +0200
-+++ john-1.6/run/john.conf	2003-07-12 12:13:22.000000000 +0200
-@@ -5,7 +5,7 @@
+--- john-1.6.37/run/john.conf.orig	2003-08-20 23:56:16.000000000 +0200
++++ john-1.6.37/run/john.conf	2004-02-28 13:46:25.597828152 +0100
+@@ -5,7 +5,8 @@
  
  [Options]
  # Wordlist file name, to be used in batch mode
--Wordfile = $JOHN/password.lst
-+Wordfile = /usr/share/dict/words
+-Wordlist = $JOHN/password.lst
++#Wordlist = $JOHN/password.lst
++Wordlist = /usr/share/dict/words
  # Use idle cycles only
  Idle = N
  # Crash recovery file saving delay in seconds
-@@ -316,25 +316,25 @@
+@@ -316,25 +317,25 @@
  
  # Incremental modes
  [Incremental:All]
@@ -103,9 +103,8 @@ diff -ruN john-1.6./src/Makefile john-1.6/src/Makefile
  ASFLAGS = -c
  LDFLAGS = -s
  OPT_NORMAL = -funroll-loops
-diff -ruN john-1.6./src/params.h john-1.6/src/params.h
---- john-1.6./src/params.h	2003-07-12 12:06:08.000000000 +0200
-+++ john-1.6/src/params.h	2003-07-12 12:10:54.000000000 +0200
+--- john-1.6.37/src/params.h.orig	2004-02-23 17:07:38.000000000 +0100
++++ john-1.6.37/src/params.h	2004-02-28 13:52:22.023643192 +0100
 @@ -22,12 +22,12 @@
   * will probably want to set this to 1 for their builds of John.
   */
@@ -122,39 +121,12 @@ diff -ruN john-1.6./src/params.h john-1.6/src/params.h
  #define JOHN_PRIVATE_HOME		"~/.john"
  #endif
  
-@@ -78,7 +78,7 @@
- #define LOG_NAME			"$JOHN/john.pot"
- #define RECOVERY_NAME			"$JOHN/restore"
+@@ -82,7 +82,7 @@
  #endif
+ #define LOG_SUFFIX			".log"
+ #define RECOVERY_SUFFIX			".rec"
 -#define WORDLIST_NAME			"$JOHN/password.lst"
 +#define WORDLIST_NAME			"/usr/share/dict/words"
  
  /*
   * Configuration file section names.
-diff -ruN john-1.6./src/params.h.rej john-1.6/src/params.h.rej
---- john-1.6./src/params.h.rej	1970-01-01 01:00:00.000000000 +0100
-+++ john-1.6/src/params.h.rej	2003-07-12 12:06:43.000000000 +0200
-@@ -0,0 +1,23 @@
-+***************
-+*** 52,61 ****
-+  /*
-+   * File names.
-+   */
-+- #define LOG_NAME			"~/john.pot"
-+- #define CFG_NAME			"~/john.ini"
-+- #define RECOVERY_NAME			"~/restore"
-+- #define WORDLIST_NAME			"~/password.lst"
-+  
-+  /*
-+   * Configuration file section names.
-+--- 52,61 ----
-+  /*
-+   * File names.
-+   */
-++ #define LOG_NAME			"~/.john.pot"
-++ #define CFG_NAME			"/usr/lib/john/john.ini"
-++ #define RECOVERY_NAME			"~/.john.restore"
-++ #define WORDLIST_NAME			"/usr/share/dict/words"
-+  
-+  /*
-+   * Configuration file section names.
