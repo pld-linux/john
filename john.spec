@@ -67,7 +67,7 @@ COPT="%{rpmcflags}"
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_bindir},%{_libdir}/john}
-install run/{*.chr,john.ini) $RPM_BUILD_ROOT%{_libdir}/john
+install run/{*.chr,john.ini} $RPM_BUILD_ROOT%{_libdir}/john
 install run/john $RPM_BUILD_ROOT%{_bindir}
 
 gzip -9nf doc/* run/mailer
