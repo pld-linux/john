@@ -1,11 +1,18 @@
+#
+# Conditional build:
+# bcond_on_mmx	- MMX optimization
+# Optimization must be chosen at compile time :(
+# Maybe some patch...? But not yet.
+#
 Summary:	Password cracker
 Summary(pl):	£amacz hase³
 Name:		john
 Version:	1.6
-Release:	4
+Release:	5
 License:	GPL
-Group:		Utilities/System
-Group(pl):	Narzêdzia/System
+Group:		Applications/System
+Group(de):	Applikationen/System
+Group(pl):	Aplikacje/System
 Source0:	http://www.openwall.com/john//%{name}-%{version}.tar.gz
 Patch0:		%{name}-%{version}.PLD.diff
 Patch1:		%{name}-%{version}.ini.diff
@@ -32,30 +39,43 @@ hase³.
 
 %build
 cd src
-# Hmm. I don't know what is in /proc/cpuinfo on other processors than Intel MMX
-if grep -q "MMX" /proc/cpuinfo; then
-	make OPT="$RPM_OPT_FLAGS" linux-x86-mmx-elf
-elif grep -q "K6" /proc/cpuinfo; then
-	make OPT="$RPM_OPT_FLAGS" linux-x86-k6-elf
-elif grep -q "Alpha" /proc/cpuinfo; then
-	make OPT="$RPM_OPT_FLAGS" linux-alpha
-elif grep -q "SPARC" /proc/cpuinfo; then
-	make OPT="$RPM_OPT_FLAGS" linux-sparc
-else
-	make OPT="$RPM_OPT_FLAGS" linux-x86-any-elf
-fi
-	
+COPT="%{?debug:-O0 -g}%{!?debug:$RPM_OPT_FLAGS}"
+
+# bleh... MMX code must be chosen at compile time :(
+# cannot use MMX for generic i586 nor i686 (Pentium/Pentium Pro have no MMX)
+# K6 optimization exists only in Makefile
+%ifarch %{ix86}
+	%if %{?bcond_on_mmx:1}%{!?bcond_on_mmx:0}
+		TARG=linux-x86-mmx-elf
+	%else
+		TARG=linux-x86-any-elf
+	%endif
+%else
+	%ifarch alpha
+		TARG=linux-alpha
+	%else
+		%ifarch sparc sparc64
+			TARG=linux-sparc
+		%else
+			TARG=generic
+		%endif
+	%endif
+%endif
+
+%{__make} OPT="$COPT" $TARG
+
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_bindir},%{_libdir}/john}
-install run/*.chr $RPM_BUILD_ROOT%{_libdir}/john
-install run/john.ini $RPM_BUILD_ROOT%{_libdir}/john
+install run/{*.chr,john.ini) $RPM_BUILD_ROOT%{_libdir}/john
 install run/john $RPM_BUILD_ROOT%{_bindir}
 
 gzip -9nf doc/* run/mailer
 
 cd $RPM_BUILD_ROOT%{_bindir}
-ln -s john unafs; ln -s john unique; ln -s john unshadow
+ln -sf john unafs
+ln -sf john unique
+ln -sf john unshadow
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -64,6 +84,4 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc doc/* run/mailer.gz
 %attr(755,root,root) %{_bindir}/*
-
-%dir %{_libdir}/john
-%{_libdir}/john/*
+%{_libdir}/john
