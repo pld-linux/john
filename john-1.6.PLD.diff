@@ -1,48 +1,48 @@
-diff -urN john-1.6.orig/run/john.ini john-1.6/run/john.ini
---- john-1.6.orig/run/john.ini	Sun Dec  6 22:27:00 1998
-+++ john-1.6/run/john.ini	Sun Dec  6 22:33:19 1998
+diff -ruN john-1.6./run/john.conf john-1.6/run/john.conf
+--- john-1.6./run/john.conf	2003-07-12 12:06:08.000000000 +0200
++++ john-1.6/run/john.conf	2003-07-12 12:13:22.000000000 +0200
 @@ -5,7 +5,7 @@
  
  [Options]
  # Wordlist file name, to be used in batch mode
--Wordfile = ~/password.lst
+-Wordfile = $JOHN/password.lst
 +Wordfile = /usr/share/dict/words
  # Use idle cycles only
  Idle = N
  # Crash recovery file saving delay in seconds
-@@ -314,25 +314,25 @@
+@@ -316,25 +316,25 @@
  
  # Incremental modes
  [Incremental:All]
--File = ~/all.chr
+-File = $JOHN/all.chr
 +File = /usr/lib/john/all.chr
  MinLen = 0
  MaxLen = 8
  CharCount = 95
  
  [Incremental:Alpha]
--File = ~/alpha.chr
+-File = $JOHN/alpha.chr
 +File = /usr/lib/john/alpha.chr
  MinLen = 1
  MaxLen = 8
  CharCount = 26
  
  [Incremental:Digits]
--File = ~/digits.chr
+-File = $JOHN/digits.chr
 +File = /usr/lib/john/digits.chr
  MinLen = 1
  MaxLen = 8
  CharCount = 10
  
  [Incremental:LanMan]
--File = ~/lanman.chr
+-File = $JOHN/lanman.chr
 +File = /usr/lib/john/lanman.chr
  MinLen = 0
  MaxLen = 7
  CharCount = 69
-diff -urN john-1.6.orig/run/mailer john-1.6/run/mailer
---- john-1.6.orig/run/mailer	Sun Dec  6 22:27:00 1998
-+++ john-1.6/run/mailer	Sun Dec  6 22:31:09 1998
+diff -ruN john-1.6./run/mailer john-1.6/run/mailer
+--- john-1.6./run/mailer	1998-12-03 01:29:50.000000000 +0100
++++ john-1.6/run/mailer	2003-07-12 12:06:43.000000000 +0200
 @@ -10,10 +10,11 @@
  fi
  
@@ -91,10 +91,10 @@ diff -urN john-1.6.orig/run/mailer john-1.6/run/mailer
  EOF
  
  		SENT=$(($SENT+1))
-diff -urN john-1.6.orig/src/Makefile john-1.6/src/Makefile
---- john-1.6.orig/src/Makefile	Sun Dec  6 22:27:00 1998
-+++ john-1.6/src/Makefile	Sun Dec  6 22:44:50 1998
-@@ -13,7 +13,7 @@
+diff -ruN john-1.6./src/Makefile john-1.6/src/Makefile
+--- john-1.6./src/Makefile	2003-07-12 12:06:08.000000000 +0200
++++ john-1.6/src/Makefile	2003-07-12 12:06:43.000000000 +0200
+@@ -14,7 +14,7 @@
  SED = sed
  NULL = /dev/null
  CPPFLAGS = -E
@@ -103,21 +103,58 @@ diff -urN john-1.6.orig/src/Makefile john-1.6/src/Makefile
  ASFLAGS = -c
  LDFLAGS = -s
  OPT_NORMAL = -funroll-loops
-diff -urN john-1.6.orig/src/params.h john-1.6/src/params.h
---- john-1.6.orig/src/params.h	Sun Dec  6 22:27:00 1998
-+++ john-1.6/src/params.h	Sun Dec  6 22:38:19 1998
-@@ -52,10 +52,10 @@
- /*
-  * File names.
+diff -ruN john-1.6./src/params.h john-1.6/src/params.h
+--- john-1.6./src/params.h	2003-07-12 12:06:08.000000000 +0200
++++ john-1.6/src/params.h	2003-07-12 12:10:54.000000000 +0200
+@@ -22,12 +22,12 @@
+  * will probably want to set this to 1 for their builds of John.
   */
--#define LOG_NAME			"~/john.pot"
--#define CFG_NAME			"~/john.ini"
--#define RECOVERY_NAME			"~/restore"
--#define WORDLIST_NAME			"~/password.lst"
-+#define LOG_NAME			"~/.john.pot"
-+#define CFG_NAME			"/usr/lib/john/john.ini"
-+#define RECOVERY_NAME			"~/.john.restore"
+ #ifndef JOHN_SYSTEMWIDE
+-#define JOHN_SYSTEMWIDE			0
++#define JOHN_SYSTEMWIDE			1
+ #endif
+ 
+ #if JOHN_SYSTEMWIDE
+-#define JOHN_SYSTEMWIDE_EXEC		"/usr/libexec/john"
+-#define JOHN_SYSTEMWIDE_HOME		"/usr/share/john"
++#define JOHN_SYSTEMWIDE_EXEC		"/usr/bin/john"
++#define JOHN_SYSTEMWIDE_HOME		"/usr/lib/john"
+ #define JOHN_PRIVATE_HOME		"~/.john"
+ #endif
+ 
+@@ -78,7 +78,7 @@
+ #define LOG_NAME			"$JOHN/john.pot"
+ #define RECOVERY_NAME			"$JOHN/restore"
+ #endif
+-#define WORDLIST_NAME			"$JOHN/password.lst"
 +#define WORDLIST_NAME			"/usr/share/dict/words"
  
  /*
   * Configuration file section names.
+diff -ruN john-1.6./src/params.h.rej john-1.6/src/params.h.rej
+--- john-1.6./src/params.h.rej	1970-01-01 01:00:00.000000000 +0100
++++ john-1.6/src/params.h.rej	2003-07-12 12:06:43.000000000 +0200
+@@ -0,0 +1,23 @@
++***************
++*** 52,61 ****
++  /*
++   * File names.
++   */
++- #define LOG_NAME			"~/john.pot"
++- #define CFG_NAME			"~/john.ini"
++- #define RECOVERY_NAME			"~/restore"
++- #define WORDLIST_NAME			"~/password.lst"
++  
++  /*
++   * Configuration file section names.
++--- 52,61 ----
++  /*
++   * File names.
++   */
+++ #define LOG_NAME			"~/.john.pot"
+++ #define CFG_NAME			"/usr/lib/john/john.ini"
+++ #define RECOVERY_NAME			"~/.john.restore"
+++ #define WORDLIST_NAME			"/usr/share/dict/words"
++  
++  /*
++   * Configuration file section names.
