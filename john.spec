@@ -47,8 +47,8 @@ fi
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/usr/{bin,lib/john}
-install run/*.chr $RPM_BUILD_ROOT/usr/lib/john
-install run/john.ini $RPM_BUILD_ROOT/usr/lib/john
+install run/*.chr $RPM_BUILD_ROOT%{_libdir}/john
+install run/john.ini $RPM_BUILD_ROOT%{_libdir}/john
 install run/john $RPM_BUILD_ROOT/usr/bin
 
 gzip -9nf doc/* run/mailer
@@ -64,8 +64,8 @@ rm -rf $RPM_BUILD_ROOT
 %doc doc/* run/mailer.gz
 %attr(755,root,root) /usr/bin/*
 
-%dir /usr/lib/john
-/usr/lib/john/*
+%dir %{_libdir}/john
+%{_libdir}/john/*
 
 %changelog
 * Mon Apr 26 1999 Micha³ Kuratczyk <kura@pld.org.pl>
