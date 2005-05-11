@@ -24,6 +24,7 @@ Patch1:		%{name}-1.6.ini.diff
 Patch2:		%{name}-1.6.makefile.diff
 Patch3:		ftp://ftp.banquise.net/users/bandecon/john-patch/john-1.6.37-bigpatch-11.diff.gz
 URL:		http://www.openwall.com/john/
+BuildRequires:	rpmbuild(macros) >= 1.213
 BuildRequires:	sed >= 4.0
 Requires:	words
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -70,7 +71,7 @@ COPT="%{rpmcflags}"
 		%ifarch sparc64
 			TARG=linux-sparc
 		%else
-			%ifarch amd64
+			%ifarch %{x8664}
 				TARG=linux-x86-64
 			%else
 				TARG=generic
