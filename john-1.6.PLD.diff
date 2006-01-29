@@ -1,5 +1,5 @@
---- john-1.6.37/run/john.conf.orig	2003-08-20 23:56:16.000000000 +0200
-+++ john-1.6.37/run/john.conf	2004-02-28 13:46:25.597828152 +0100
+--- john-1.7/run/john.conf.orig	2005-12-16 16:02:14.000000000 +0100
++++ john-1.7/run/john.conf	2006-01-29 01:06:33.372110776 +0100
 @@ -5,7 +5,8 @@
  
  [Options]
@@ -10,7 +10,7 @@
  # Use idle cycles only
  Idle = N
  # Crash recovery file saving delay in seconds
-@@ -316,25 +317,25 @@
+@@ -323,31 +324,31 @@
  
  # Incremental modes
  [Incremental:All]
@@ -33,6 +33,13 @@
  MinLen = 1
  MaxLen = 8
  CharCount = 10
+ 
+ [Incremental:Alnum]
+-File = $JOHN/alnum.chr
++File = /usr/lib/john/alnum.chr
+ MinLen = 1
+ MaxLen = 8
+ CharCount = 36
  
  [Incremental:LanMan]
 -File = $JOHN/lanman.chr
@@ -103,9 +110,9 @@ diff -ruN john-1.6./src/Makefile john-1.6/src/Makefile
  ASFLAGS = -c
  LDFLAGS = -s
  OPT_NORMAL = -funroll-loops
---- john-1.6.37/src/params.h.orig	2004-02-23 17:07:38.000000000 +0100
-+++ john-1.6.37/src/params.h	2004-02-28 13:52:22.023643192 +0100
-@@ -22,12 +22,12 @@
+--- john-1.7/src/params.h.orig	2006-01-09 15:33:18.000000000 +0100
++++ john-1.7/src/params.h	2006-01-29 01:10:31.736873824 +0100
+@@ -22,15 +22,15 @@
   * will probably want to set this to 1 for their builds of John.
   */
  #ifndef JOHN_SYSTEMWIDE
@@ -114,14 +121,17 @@ diff -ruN john-1.6./src/Makefile john-1.6/src/Makefile
  #endif
  
  #if JOHN_SYSTEMWIDE
+ #ifndef JOHN_SYSTEMWIDE_EXEC
 -#define JOHN_SYSTEMWIDE_EXEC		"/usr/libexec/john"
--#define JOHN_SYSTEMWIDE_HOME		"/usr/share/john"
 +#define JOHN_SYSTEMWIDE_EXEC		"/usr/bin/john"
+ #endif
+ #ifndef JOHN_SYSTEMWIDE_HOME
+-#define JOHN_SYSTEMWIDE_HOME		"/usr/share/john"
 +#define JOHN_SYSTEMWIDE_HOME		"/usr/lib/john"
+ #endif
  #define JOHN_PRIVATE_HOME		"~/.john"
  #endif
- 
-@@ -82,7 +82,7 @@
+@@ -89,7 +89,7 @@
  #endif
  #define LOG_SUFFIX			".log"
  #define RECOVERY_SUFFIX			".rec"
