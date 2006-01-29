@@ -10,15 +10,12 @@
 Summary:	Password cracker
 Summary(pl):	£amacz hase³
 Name:		john
-Version:	1.6.37
-Release:	7
+Version:	1.7
+Release:	0.1
 License:	GPL
 Group:		Applications/System
-Source0:	http://www.openwall.com/john/a/%{name}-%{version}.tar.gz
-# Source0-md5:	9403233b640927295c05b0564ff1f678
-# needed for docs and charset files
-Source1:	http://www.openwall.com/john/%{name}-1.6.tar.gz
-# Source1-md5:	aae782f160041b2bdc624b0a84054e32
+Source0:	http://www.openwall.com/john/d/%{name}-%{version}.tar.bz2
+# Source0-md5:	615b912caa677eec790e28745a12b2ae
 Patch0:		%{name}-1.6.PLD.diff
 Patch1:		%{name}-1.6.ini.diff
 Patch2:		%{name}-1.6.makefile.diff
@@ -43,13 +40,14 @@ hase³. By³ testowany z Linux x86/Alpha/SPARC, FreeBSD x86, OpenBSD x86,
 Solaris 2.x SPARC i x86, Digital UNIX, AIX, HP-UX oraz IRIX.
 
 %prep
-%setup -q -a1
+%setup -q 
 %patch0 -p1
 #%patch1 -p1
 #%patch2 -p1
 # or move it to /var maybe?
-%patch3 -p1
+#%patch3 -p1
 sed -i -e 's,/usr/lib,%{_libdir},' src/params.h run/john.conf
+sed -i -e 's/CLK_TCK/CLOCKS_PER_SEC/g' src/*.c
 
 %build
 cd src
@@ -60,9 +58,9 @@ COPT="%{rpmcflags}"
 # K6 optimization exists only in Makefile
 %ifarch %{ix86}
 	%if %{with mmx}
-		TARG=linux-x86-mmx-elf
+		TARG=linux-x86-mmx
 	%else
-		TARG=linux-x86-any-elf
+		TARG=linux-x86-any
 	%endif
 %else
 	%ifarch alpha
@@ -87,7 +85,7 @@ COPT="%{rpmcflags}"
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_bindir},%{_libdir}/john}
-install run/john.conf john-1.6/run/*.chr $RPM_BUILD_ROOT%{_libdir}/john
+install run/john.conf run/*.chr $RPM_BUILD_ROOT%{_libdir}/john
 install run/john $RPM_BUILD_ROOT%{_bindir}
 
 rm -f doc/INSTALL
@@ -102,6 +100,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc doc/* john-1.6/doc/{CONFIG,EXAMPLES,EXTERNAL,FAQ,MODES,NEWS,OPTIONS,RULES} run/mailer
+%doc doc/* run/mailer
 %attr(755,root,root) %{_bindir}/*
 %{_libdir}/john
