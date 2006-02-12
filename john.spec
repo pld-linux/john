@@ -11,15 +11,12 @@ Summary:	Password cracker
 Summary(pl):	£amacz hase³
 Name:		john
 Version:	1.7
-Release:	0.1
+Release:	0.2
 License:	GPL
 Group:		Applications/System
 Source0:	http://www.openwall.com/john/d/%{name}-%{version}.tar.bz2
 # Source0-md5:	615b912caa677eec790e28745a12b2ae
-Patch0:		%{name}-1.6.PLD.diff
-Patch1:		%{name}-1.6.ini.diff
-Patch2:		%{name}-1.6.makefile.diff
-Patch3:		ftp://ftp.banquise.net/users/bandecon/john-patch/john-1.6.37-bigpatch-11.diff.gz
+Patch0:		%{name}-mailer.patch
 URL:		http://www.openwall.com/john/
 BuildRequires:	rpmbuild(macros) >= 1.213
 BuildRequires:	sed >= 4.0
@@ -42,16 +39,11 @@ Solaris 2.x SPARC i x86, Digital UNIX, AIX, HP-UX oraz IRIX.
 %prep
 %setup -q 
 %patch0 -p1
-#%patch1 -p1
-#%patch2 -p1
-# or move it to /var maybe?
-#%patch3 -p1
-sed -i -e 's,/usr/lib,%{_libdir},' src/params.h run/john.conf
+
 sed -i -e 's/CLK_TCK/CLOCKS_PER_SEC/g' src/*.c
 
 %build
 cd src
-COPT="%{rpmcflags}"
 
 # bleh... MMX code must be chosen at compile time :(
 # cannot use MMX for generic i586 nor i686 (Pentium/Pentium Pro have no MMX)
@@ -79,16 +71,18 @@ COPT="%{rpmcflags}"
 %endif
 
 %{__make} $TARG \
-	OPT="$COPT" \
+	CFLAGS="-c -Wall -fomit-frame-pointer %{rpmcflags} -DJOHN_SYSTEMWIDE=1" \
 	CC="%{__cc}"
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_bindir},%{_libdir}/john}
-install run/john.conf run/*.chr $RPM_BUILD_ROOT%{_libdir}/john
+
+install -d $RPM_BUILD_ROOT{%{_bindir},%{_datadir}/john}
+install run/{*.conf,*.chr,*.lst} $RPM_BUILD_ROOT%{_datadir}/john
 install run/john $RPM_BUILD_ROOT%{_bindir}
 
 rm -f doc/INSTALL
+
 
 cd $RPM_BUILD_ROOT%{_bindir}
 ln -sf john unafs
@@ -102,4 +96,4 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc doc/* run/mailer
 %attr(755,root,root) %{_bindir}/*
-%{_libdir}/john
+%{_datadir}/john
