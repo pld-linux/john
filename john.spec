@@ -83,7 +83,6 @@ install run/john $RPM_BUILD_ROOT%{_bindir}
 
 rm -f doc/INSTALL
 
-
 cd $RPM_BUILD_ROOT%{_bindir}
 ln -sf john unafs
 ln -sf john unique
