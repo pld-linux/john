@@ -28,17 +28,23 @@ Requires:	words
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
-John the Ripper is a password cracker, currently available for UNIX,
-DOS, WinNT/Win95. Its primary purpose is to detect weak UNIX
-passwords. It has been tested with Linux x86/Alpha/SPARC, FreeBSD x86,
-OpenBSD x86, Solaris 2.x SPARC and x86, Digital UNIX, AIX, HP-UX, and
-IRIX.
+John the Ripper is a fast password cracker, currently available for
+many flavors of Unix (11 are officially supported, not counting
+different architectures), DOS, Win32, BeOS, and OpenVMS (the latter
+requires a contributed patch). Its primary purpose is to detect weak
+Unix passwords. Besides several crypt(3) password hash types most
+commonly found on various Unix flavors, supported out of the box are
+Kerberos/AFS and Windows NT/2000/XP LM hashes, plus several more with
+contributed patches.
 
 %description -l pl
-John The Ripper jest "³amaczem" hase³ dostêpnym dla systemów UNIX,
-DOS, WinNT/Win95. G³ównym jego zadaniem jest wykrywanie "s³abych"
-hase³. By³ testowany z Linux x86/Alpha/SPARC, FreeBSD x86, OpenBSD x86,
-Solaris 2.x SPARC i x86, Digital UNIX, AIX, HP-UX oraz IRIX.
+John The Ripper jest szybkim "³amaczem" hase³ dostêpnym dla wielu
+rodzajów uniksów (oficjalnie obs³ugiwanych jest 11, nie licz±c ró¿nych
+architektur), DOS-a, Win32, BeOS-a i OpenVMS-a (ten ostatni wymaga
+³aty). G³ównym zastosowaniem jest wykrywanie s³abych hase³ uniksowych.
+Oprócz ró¿nych rodzajów skrótów hase³ crypt(3) najczê¶ciej u¿ywanych
+na ró¿nych uniksach, obs³ugiwane s± tak¿e skróty Kerberos/AFS oraz
+Windows NT/2000/XP LM, a tak¿e kilka innych przy u¿yciu ³at.
 
 %prep
 %setup -q 
