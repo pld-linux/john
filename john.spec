@@ -47,7 +47,6 @@ cd src
 
 # bleh... MMX code must be chosen at compile time :(
 # cannot use MMX for generic i586 nor i686 (Pentium/Pentium Pro have no MMX)
-# K6 optimization exists only in Makefile
 %ifarch %{ix86}
 	%if %{with mmx}
 		TARG=linux-x86-mmx
@@ -58,7 +57,7 @@ cd src
 	%ifarch alpha
 		TARG=linux-alpha
 	%else
-		%ifarch sparc64
+		%ifarch sparc sparcv9
 			TARG=linux-sparc
 		%else
 			%ifarch %{x8664}
