@@ -1,11 +1,15 @@
 #
-# Conditional build:
-%bcond_with	mmx	# MMX optimization
-# Optimization must be chosen at compile time :(
-# Maybe some patch...? But not yet.
-#
-%ifarch athlon
-%define with_mmx 1
+%ifarch i586 i686 athlon pentium2 pentium3 pentium4
+%define do_mmx 1
+%else
+%define	do_mmx 0
+%endif
+%ifarch i586 i686
+%define do_mmxfb 1
+%define	optmmxfb	-DCPU_FALLBACK=1
+%else
+%define do_mmxfb 0
+%undefine optmmxfb
 %endif
 Summary:	Password cracker
 Summary(pl):	£amacz hase³
@@ -45,10 +49,16 @@ sed -i -e 's/CLK_TCK/CLOCKS_PER_SEC/g' src/*.c
 %build
 cd src
 
-# bleh... MMX code must be chosen at compile time :(
-# cannot use MMX for generic i586 nor i686 (Pentium/Pentium Pro have no MMX)
+%if %{do_mmxfb}
+%{__make} linux-x86-any \
+	CFLAGS="-c -Wall -fomit-frame-pointer %{rpmcflags} -DJOHN_SYSTEMWIDE=1" \
+	CC="%{__cc}"
+mv ../run/john ../run/john-non-mmx
+%{__make} clean
+%endif
+
 %ifarch %{ix86}
-	%if %{with mmx}
+	%if %{do_mmx}
 		TARG=linux-x86-mmx
 	%else
 		TARG=linux-x86-any
@@ -70,7 +80,7 @@ cd src
 %endif
 
 %{__make} $TARG \
-	CFLAGS="-c -Wall -fomit-frame-pointer %{rpmcflags} -DJOHN_SYSTEMWIDE=1" \
+	CFLAGS="-c -Wall -fomit-frame-pointer %{rpmcflags} -DJOHN_SYSTEMWIDE=1 -DJOHN_SYSTEMWIDE_EXEC=\\\"%{_libdir}/john\\\" %{?optmmxfb}" \
 	CC="%{__cc}"
 
 %install
@@ -79,6 +89,10 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_bindir},%{_datadir}/john}
 install run/{*.conf,*.chr,*.lst} $RPM_BUILD_ROOT%{_datadir}/john
 install run/john $RPM_BUILD_ROOT%{_bindir}
+%if %{do_mmxfb}
+install -d $RPM_BUILD_ROOT%{_libdir}/john
+install run/john-non-mmx $RPM_BUILD_ROOT%{_libdir}/john
+%endif
 
 rm -f doc/INSTALL
 
@@ -94,4 +108,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc doc/* run/mailer
 %attr(755,root,root) %{_bindir}/*
+%if %{do_mmxfb}
+%dir %{_libdir}/john
+%attr(755,root,root) %{_libdir}/john/john-non-mmx
+%endif
 %{_datadir}/john
