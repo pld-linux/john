@@ -47,7 +47,7 @@ na ró¿nych uniksach, obs³ugiwane s± tak¿e skróty Kerberos/AFS oraz
 Windows NT/2000/XP LM, a tak¿e kilka innych przy u¿yciu ³at.
 
 %prep
-%setup -q 
+%setup -q
 %patch0 -p1
 
 sed -i -e 's/CLK_TCK/CLOCKS_PER_SEC/g' src/*.c
@@ -80,7 +80,7 @@ mv ../run/john ../run/john-non-mmx
 				TARG=linux-x86-64
 			%else
 				TARG=generic
-			%endif	
+			%endif
 		%endif
 	%endif
 %endif
