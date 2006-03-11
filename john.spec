@@ -14,16 +14,15 @@
 Summary:	Password cracker
 Summary(pl):	£amacz hase³
 Name:		john
-Version:	1.7
-Release:	0.2
+Version:	1.7.0.1
+Release:	1
 License:	GPL
 Group:		Applications/System
-Source0:	http://www.openwall.com/john/d/%{name}-%{version}.tar.bz2
-# Source0-md5:	615b912caa677eec790e28745a12b2ae
+Source0:	http://www.openwall.com/john/e/%{name}-%{version}.tar.bz2
+# Source0-md5:	973e21352a08b2279cfe3bb0e532a863
 Patch0:		%{name}-mailer.patch
 URL:		http://www.openwall.com/john/
 BuildRequires:	rpmbuild(macros) >= 1.213
-BuildRequires:	sed >= 4.0
 Requires:	words
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -49,8 +48,6 @@ Windows NT/2000/XP LM, a tak¿e kilka innych przy u¿yciu ³at.
 %prep
 %setup -q
 %patch0 -p1
-
-sed -i -e 's/CLK_TCK/CLOCKS_PER_SEC/g' src/*.c
 
 %build
 cd src
