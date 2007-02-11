@@ -14,12 +14,12 @@
 Summary:	Password cracker
 Summary(pl):	£amacz hase³
 Name:		john
-Version:	1.7.0.2
+Version:	1.7.2
 Release:	1
 License:	GPL
 Group:		Applications/System
 Source0:	http://www.openwall.com/john/f/%{name}-%{version}.tar.bz2
-# Source0-md5:	0a87dca1f149493fc087ea8a8b6ae5d5
+# Source0-md5:	dc6a6c2a885110ccb5da4c1e2010cb07
 Patch0:		%{name}-mailer.patch
 URL:		http://www.openwall.com/john/
 BuildRequires:	rpmbuild(macros) >= 1.213
