@@ -12,7 +12,7 @@
 %undefine optmmxfb
 %endif
 Summary:	Password cracker
-Summary(pl):	£amacz hase³
+Summary(pl.UTF-8):   Åamacz haseÅ‚
 Name:		john
 Version:	1.7.2
 Release:	1
@@ -36,14 +36,14 @@ commonly found on various Unix flavors, supported out of the box are
 Kerberos/AFS and Windows NT/2000/XP LM hashes, plus several more with
 contributed patches.
 
-%description -l pl
-John The Ripper jest szybkim "³amaczem" hase³ dostêpnym dla wielu
-rodzajów uniksów (oficjalnie obs³ugiwanych jest 11, nie licz±c ró¿nych
+%description -l pl.UTF-8
+John The Ripper jest szybkim "Å‚amaczem" haseÅ‚ dostÄ™pnym dla wielu
+rodzajÃ³w uniksÃ³w (oficjalnie obsÅ‚ugiwanych jest 11, nie liczÄ…c rÃ³Å¼nych
 architektur), DOS-a, Win32, BeOS-a i OpenVMS-a (ten ostatni wymaga
-³aty). G³ównym zastosowaniem jest wykrywanie s³abych hase³ uniksowych.
-Oprócz ró¿nych rodzajów skrótów hase³ crypt(3) najczê¶ciej u¿ywanych
-na ró¿nych uniksach, obs³ugiwane s± tak¿e skróty Kerberos/AFS oraz
-Windows NT/2000/XP LM, a tak¿e kilka innych przy u¿yciu ³at.
+Å‚aty). GÅ‚Ã³wnym zastosowaniem jest wykrywanie sÅ‚abych haseÅ‚ uniksowych.
+OprÃ³cz rÃ³Å¼nych rodzajÃ³w skrÃ³tÃ³w haseÅ‚ crypt(3) najczÄ™Å›ciej uÅ¼ywanych
+na rÃ³Å¼nych uniksach, obsÅ‚ugiwane sÄ… takÅ¼e skrÃ³ty Kerberos/AFS oraz
+Windows NT/2000/XP LM, a takÅ¼e kilka innych przy uÅ¼yciu Å‚at.
 
 %prep
 %setup -q
