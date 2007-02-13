@@ -12,7 +12,7 @@
 %undefine optmmxfb
 %endif
 Summary:	Password cracker
-Summary(pl.UTF-8):   Łamacz haseł
+Summary(pl.UTF-8):	Łamacz haseł
 Name:		john
 Version:	1.7.2
 Release:	1
