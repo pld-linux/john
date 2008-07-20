@@ -14,12 +14,12 @@
 Summary:	Password cracker
 Summary(pl.UTF-8):	Łamacz haseł
 Name:		john
-Version:	1.7.2
+Version:	1.7.3.1
 Release:	1
 License:	GPL
 Group:		Applications/System
-Source0:	http://www.openwall.com/john/f/%{name}-%{version}.tar.bz2
-# Source0-md5:	dc6a6c2a885110ccb5da4c1e2010cb07
+Source0:	http://www.openwall.com/john/g/%{name}-%{version}.tar.bz2
+# Source0-md5:	4a8de450ff332bd0c7cbc573eb5032d9
 Patch0:		%{name}-mailer.patch
 URL:		http://www.openwall.com/john/
 BuildRequires:	rpmbuild(macros) >= 1.213
