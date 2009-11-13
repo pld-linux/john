@@ -1,6 +1,6 @@
 #
 # Conditional build:
-%bcond_with jumbopath	# This patch integrates lots of contributed
+%bcond_with jumbopatch	# This patch integrates lots of contributed
 			# patches adding support for over 30 
 			# of additional hash types, and more. 
 
@@ -26,10 +26,10 @@ Group:		Applications/System
 Source0:	http://www.openwall.com/john/g/%{name}-%{version}.tar.bz2
 # Source0-md5:	2f2310c49961c3edea6f92b8dcd45ff4
 Patch0:		%{name}-mailer.patch
-%{?with_jumbopath:Patch1:		http://www.openwall.com/john/contrib/john-%{version}-jumbo-2.diff.gz}
+%{?with_jumbopatch:Patch1:		http://www.openwall.com/john/contrib/john-%{version}-jumbo-2.diff.gz}
 URL:		http://www.openwall.com/john/
 BuildRequires:	rpmbuild(macros) >= 1.213
-%{?with_jumbopath:BuildRequires:        openssl-devel >= 0.9.7}
+%{?with_jumbopatch:BuildRequires:        openssl-devel >= 0.9.7}
 Requires:	words
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -55,7 +55,7 @@ Windows NT/2000/XP LM, a także kilka innych przy użyciu łat.
 %prep
 %setup -q
 %patch0 -p1
-%{?with_jumbopath:%patch1 -p1}
+%{?with_jumbopatch:%patch1 -p1}
 
 %build
 cd src
