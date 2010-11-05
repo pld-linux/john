@@ -20,7 +20,7 @@ Summary:	Password cracker
 Summary(pl.UTF-8):	Łamacz haseł
 Name:		john
 Version:	1.7.6
-Release:	1
+Release:	2
 License:	GPL
 Group:		Applications/System
 Source0:	http://www.openwall.com/john/g/%{name}-%{version}.tar.bz2
@@ -64,10 +64,15 @@ rm -f doc/INSTALL
 %build
 cd src
 
+cat > defs.h <<'EOF'
+#define	JOHN_SYSTEMWIDE 1
+#define	JOHN_SYSTEMWIDE_EXEC "%{_libdir}/john"
+EOF
+
 %if %{do_mmxfb}
 %{__make} linux-x86-any \
 	CC="%{__cc}" \
-	OPTFLAGS="%{rpmcflags} -DJOHN_SYSTEMWIDE=1"
+	OPTFLAGS="%{rpmcflags} -include defs.h"
 mv ../run/john ../run/john-non-mmx
 %{__make} clean
 %endif
@@ -92,7 +97,7 @@ TARG=generic
 
 %{__make} $TARG \
 	CC="%{__cc}" \
-	OPTFLAGS="%{rpmcflags} -DJOHN_SYSTEMWIDE=1 -DJOHN_SYSTEMWIDE_EXEC=\\\"%{_libdir}/john\\\" %{?optmmxfb}"
+	OPTFLAGS='%{rpmcflags} -include defs.h %{?optmmxfb}'
 
 %install
 rm -rf $RPM_BUILD_ROOT
