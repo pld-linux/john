@@ -1,8 +1,8 @@
 #
 # Conditional build:
 %bcond_with jumbopatch	# This patch integrates lots of contributed
-			# patches adding support for over 30 
-			# of additional hash types, and more. 
+			# patches adding support for over 30
+			# of additional hash types, and more.
 
 %ifarch i586 i686 athlon pentium2 pentium3 pentium4
 %define do_mmx 1
@@ -26,10 +26,11 @@ Group:		Applications/System
 Source0:	http://www.openwall.com/john/g/%{name}-%{version}.tar.bz2
 # Source0-md5:	321ac0793f1aa4f0603b33a393133756
 Patch0:		%{name}-mailer.patch
-%{?with_jumbopatch:Patch1:		http://www.openwall.com/john/contrib/john-%{version}-jumbo-2.diff.gz}
+Patch1:		optflags.patch
+%{?with_jumbopatch:Patch1: http://www.openwall.com/john/contrib/%{name}-%{version}-jumbo-2.diff.gz}
 URL:		http://www.openwall.com/john/
+%{?with_jumbopatch:BuildRequires: openssl-devel >= 0.9.7}
 BuildRequires:	rpmbuild(macros) >= 1.213
-%{?with_jumbopatch:BuildRequires:        openssl-devel >= 0.9.7}
 Requires:	words
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -55,62 +56,57 @@ Windows NT/2000/XP LM, a także kilka innych przy użyciu łat.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 %{?with_jumbopatch:%patch1 -p1}
+
+rm -f doc/INSTALL
 
 %build
 cd src
 
 %if %{do_mmxfb}
 %{__make} linux-x86-any \
-	CFLAGS="-c -Wall -fomit-frame-pointer %{rpmcflags} -DJOHN_SYSTEMWIDE=1" \
-	CC="%{__cc}"
+	CC="%{__cc}" \
+	OPTFLAGS="%{rpmcflags} -DJOHN_SYSTEMWIDE=1"
 mv ../run/john ../run/john-non-mmx
 %{__make} clean
 %endif
 
+TARG=generic
 %ifarch %{ix86}
 	%if %{do_mmx}
 		TARG=linux-x86-mmx
 	%else
 		TARG=linux-x86-any
 	%endif
-%else
-	%ifarch alpha
-		TARG=linux-alpha
-	%else
-		%ifarch sparc sparcv9
-			TARG=linux-sparc
-		%else
-			%ifarch %{x8664}
-				TARG=linux-x86-64
-			%else
-				TARG=generic
-			%endif
-		%endif
-	%endif
+%endif
+%ifarch alpha
+	TARG=linux-alpha
+%endif
+%ifarch sparc sparcv9
+	TARG=linux-sparc
+%endif
+%ifarch %{x8664}
+	TARG=linux-x86-64
 %endif
 
 %{__make} $TARG \
-	CFLAGS="-c -Wall -fomit-frame-pointer %{rpmcflags} -DJOHN_SYSTEMWIDE=1 -DJOHN_SYSTEMWIDE_EXEC=\\\"%{_libdir}/john\\\" %{?optmmxfb}" \
-	CC="%{__cc}"
+	CC="%{__cc}" \
+	OPTFLAGS="%{rpmcflags} -DJOHN_SYSTEMWIDE=1 -DJOHN_SYSTEMWIDE_EXEC=\\\"%{_libdir}/john\\\" %{?optmmxfb}"
 
 %install
 rm -rf $RPM_BUILD_ROOT
-
 install -d $RPM_BUILD_ROOT{%{_bindir},%{_datadir}/john}
-install run/{*.conf,*.chr,*.lst} $RPM_BUILD_ROOT%{_datadir}/john
-install run/john $RPM_BUILD_ROOT%{_bindir}
+cp -a run/{*.conf,*.chr,*.lst} $RPM_BUILD_ROOT%{_datadir}/john
+install -p run/john $RPM_BUILD_ROOT%{_bindir}
 %if %{do_mmxfb}
 install -d $RPM_BUILD_ROOT%{_libdir}/john
-install run/john-non-mmx $RPM_BUILD_ROOT%{_libdir}/john
+install -p run/john-non-mmx $RPM_BUILD_ROOT%{_libdir}/john
 %endif
 
-rm -f doc/INSTALL
-
-cd $RPM_BUILD_ROOT%{_bindir}
-ln -sf john unafs
-ln -sf john unique
-ln -sf john unshadow
+ln -sf john $RPM_BUILD_ROOT%{_bindir}/unafs
+ln -sf john $RPM_BUILD_ROOT%{_bindir}/unique
+ln -sf john $RPM_BUILD_ROOT%{_bindir}/unshadow
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -118,7 +114,10 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc doc/* run/mailer
-%attr(755,root,root) %{_bindir}/*
+%attr(755,root,root) %{_bindir}/john
+%attr(755,root,root) %{_bindir}/unafs
+%attr(755,root,root) %{_bindir}/unique
+%attr(755,root,root) %{_bindir}/unshadow
 %if %{do_mmxfb}
 %dir %{_libdir}/john
 %attr(755,root,root) %{_libdir}/john/john-non-mmx
