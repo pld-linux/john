@@ -1,86 +1,117 @@
 #
 # Conditional build:
-# _with_mmx	- MMX optimization
-# Optimization must be chosen at compile time :(
-# Maybe some patch...? But not yet.
-#
-%ifarch athlon
-%define _with_mmx 1
+%bcond_with jumbopatch	# This patch integrates lots of contributed
+			# patches adding support for over 30
+			# of additional hash types, and more.
+
+%ifarch i586 i686 athlon pentium2 pentium3 pentium4
+%define do_mmx 1
+%else
+%define	do_mmx 0
+%endif
+%ifarch i586 i686
+%define do_mmxfb 1
+%define	optmmxfb	-DCPU_FALLBACK=1
+%else
+%define do_mmxfb 0
+%undefine optmmxfb
 %endif
 Summary:	Password cracker
-Summary(pl):	�amacz hase�
+Summary(pl.UTF-8):	Łamacz haseł
 Name:		john
-Version:	1.6.37
-Release:	1
+Version:	1.7.6
+Release:	2
 License:	GPL
 Group:		Applications/System
-Source0:	http://www.openwall.com/john/%{name}-1.6.tar.gz
-# Source0-md5:	aae782f160041b2bdc624b0a84054e32
-Patch0:		%{name}-1.6.34.patch
-Patch1:		%{name}-1.6.PLD.diff
-Patch2:		%{name}-1.6.ini.diff
-Patch3:		%{name}-1.6.makefile.diff
+Source0:	http://www.openwall.com/john/g/%{name}-%{version}.tar.bz2
+# Source0-md5:	321ac0793f1aa4f0603b33a393133756
+Patch0:		%{name}-mailer.patch
+Patch1:		optflags.patch
+%{?with_jumbopatch:Patch1: http://www.openwall.com/john/contrib/%{name}-%{version}-jumbo-2.diff.gz}
+URL:		http://www.openwall.com/john/
+%{?with_jumbopatch:BuildRequires: openssl-devel >= 0.9.7}
+BuildRequires:	rpmbuild(macros) >= 1.213
+Requires:	words
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
-John the Ripper is a password cracker, currently available for UNIX,
-DOS, WinNT/Win95. Its primary purpose is to detect weak UNIX
-passwords. It has been tested with Linux x86/Alpha/SPARC, FreeBSD x86,
-OpenBSD x86, Solaris 2.x SPARC and x86, Digital UNIX, AIX, HP-UX, and
-IRIX.
+John the Ripper is a fast password cracker, currently available for
+many flavors of Unix (11 are officially supported, not counting
+different architectures), DOS, Win32, BeOS, and OpenVMS (the latter
+requires a contributed patch). Its primary purpose is to detect weak
+Unix passwords. Besides several crypt(3) password hash types most
+commonly found on various Unix flavors, supported out of the box are
+Kerberos/AFS and Windows NT/2000/XP LM hashes, plus several more with
+contributed patches.
 
-%description -l pl
-John The Ripper jest "�amaczem" hase� dost�pnym dla system�w UNIX,
-DOS, WinNT/Win95. G��wnym jego zadaniem jest wykrywanie "s�abych"
-hase�. By� testowany z Linux x86/Alpha/SPARC, FreeBSD x86, OpenBSD x86,
-Solaris 2.x SPARC i x86, Digital UNIX, AIX, HP-UX oraz IRIX.
+%description -l pl.UTF-8
+John The Ripper jest szybkim "łamaczem" haseł dostępnym dla wielu
+rodzajów uniksów (oficjalnie obsługiwanych jest 11, nie licząc różnych
+architektur), DOS-a, Win32, BeOS-a i OpenVMS-a (ten ostatni wymaga
+łaty). Głównym zastosowaniem jest wykrywanie słabych haseł uniksowych.
+Oprócz różnych rodzajów skrótów haseł crypt(3) najczęściej używanych
+na różnych uniksach, obsługiwane są także skróty Kerberos/AFS oraz
+Windows NT/2000/XP LM, a także kilka innych przy użyciu łat.
 
 %prep
-%setup -q -n %{name}-1.6
+%setup -q
 %patch0 -p1
 %patch1 -p1
-#%patch2 -p1
-#%patch3 -p1
-
-%build
-cd src
-COPT="%{rpmcflags}"
-
-# bleh... MMX code must be chosen at compile time :(
-# cannot use MMX for generic i586 nor i686 (Pentium/Pentium Pro have no MMX)
-# K6 optimization exists only in Makefile
-%ifarch %{ix86}
-	%if %{?_with_mmx:1}%{!?_with_mmx:0}
-		TARG=linux-x86-mmx-elf
-	%else
-		TARG=linux-x86-any-elf
-	%endif
-%else
-	%ifarch alpha
-		TARG=linux-alpha
-	%else
-		%ifarch sparc sparc64
-			TARG=linux-sparc
-		%else
-			TARG=generic
-		%endif
-	%endif
-%endif
-
-%{__make} OPT="$COPT" CC="%{__cc}" $TARG
-
-%install
-rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_bindir},%{_libdir}/john}
-install run/{*.chr,john.conf} $RPM_BUILD_ROOT%{_libdir}/john
-install run/john $RPM_BUILD_ROOT%{_bindir}
+%{?with_jumbopatch:%patch1 -p1}
 
 rm -f doc/INSTALL
 
-cd $RPM_BUILD_ROOT%{_bindir}
-ln -sf john unafs
-ln -sf john unique
-ln -sf john unshadow
+%build
+cd src
+
+cat > defs.h <<'EOF'
+#define	JOHN_SYSTEMWIDE 1
+#define	JOHN_SYSTEMWIDE_EXEC "%{_libdir}/john"
+EOF
+
+%if %{do_mmxfb}
+%{__make} linux-x86-any \
+	CC="%{__cc}" \
+	OPTFLAGS="%{rpmcflags} -include defs.h"
+mv ../run/john ../run/john-non-mmx
+%{__make} clean
+%endif
+
+TARG=generic
+%ifarch %{ix86}
+	%if %{do_mmx}
+		TARG=linux-x86-mmx
+	%else
+		TARG=linux-x86-any
+	%endif
+%endif
+%ifarch alpha
+	TARG=linux-alpha
+%endif
+%ifarch sparc sparcv9
+	TARG=linux-sparc
+%endif
+%ifarch %{x8664}
+	TARG=linux-x86-64
+%endif
+
+%{__make} $TARG \
+	CC="%{__cc}" \
+	OPTFLAGS='%{rpmcflags} -include defs.h %{?optmmxfb}'
+
+%install
+rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT{%{_bindir},%{_datadir}/john}
+cp -a run/{*.conf,*.chr,*.lst} $RPM_BUILD_ROOT%{_datadir}/john
+install -p run/john $RPM_BUILD_ROOT%{_bindir}
+%if %{do_mmxfb}
+install -d $RPM_BUILD_ROOT%{_libdir}/john
+install -p run/john-non-mmx $RPM_BUILD_ROOT%{_libdir}/john
+%endif
+
+ln -sf john $RPM_BUILD_ROOT%{_bindir}/unafs
+ln -sf john $RPM_BUILD_ROOT%{_bindir}/unique
+ln -sf john $RPM_BUILD_ROOT%{_bindir}/unshadow
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -88,5 +119,12 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc doc/* run/mailer
-%attr(755,root,root) %{_bindir}/*
-%{_libdir}/john
+%attr(755,root,root) %{_bindir}/john
+%attr(755,root,root) %{_bindir}/unafs
+%attr(755,root,root) %{_bindir}/unique
+%attr(755,root,root) %{_bindir}/unshadow
+%if %{do_mmxfb}
+%dir %{_libdir}/john
+%attr(755,root,root) %{_libdir}/john/john-non-mmx
+%endif
+%{_datadir}/john
