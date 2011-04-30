@@ -47,6 +47,17 @@ URL:		http://www.openwall.com/john/
 %{?with_jumbopatch:BuildRequires: openssl-devel >= 0.9.7}
 BuildRequires:	rpmbuild(macros) >= 1.213
 Requires:	words
+%ifarch %{ix86} %{x8664}
+%if %{with xop}
+Requires:	cpuinfo(xop)
+%endif
+%if %{with xop} || %{with avx}
+Requires:	cpuinfo(avx)
+%endif
+%if %{do_sse2} && !%{do_ssefb}
+Requires:	cpuinfo(sse2)
+%endif
+%endif
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
