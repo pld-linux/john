@@ -1,13 +1,21 @@
 #
 # Conditional build:
-%bcond_with jumbopatch	# This patch integrates lots of contributed
-			# patches adding support for over 30
-			# of additional hash types, and more.
-
+%bcond_with	jumbopatch	# This patch integrates lots of contributed
+				# patches adding support for over 30
+				# of additional hash types, and more.
+%bcond_with	avx		# use x86 AVX instructions
+%bcond_with	xop		# use x86 XOP instructions
+%bcond_with	altivec		# use PPC Altivec instructions
+#
 %ifarch i586 i686 athlon pentium2 pentium3 pentium4
 %define do_mmx 1
 %else
 %define	do_mmx 0
+%endif
+%ifarch	i686 athlon pentium4
+%define	do_sse2 1
+%else
+%define	do_sse2 0
 %endif
 %ifarch i586 i686
 %define do_mmxfb 1
@@ -16,18 +24,25 @@
 %define do_mmxfb 0
 %undefine optmmxfb
 %endif
+%ifarch i686 athlon
+%define	do_ssefb 1
+%define	optssefb	-DCPU_FALLBACK=1
+%else
+%define	do_ssefb 0
+%define	optssefb
+%endif
 Summary:	Password cracker
 Summary(pl.UTF-8):	Łamacz haseł
 Name:		john
-Version:	1.7.6
-Release:	2
-License:	GPL
+Version:	1.7.7
+Release:	1
+License:	GPL v2
 Group:		Applications/System
 Source0:	http://www.openwall.com/john/g/%{name}-%{version}.tar.bz2
-# Source0-md5:	321ac0793f1aa4f0603b33a393133756
+# Source0-md5:	be316618de834a58573a21225d4a2674
 Patch0:		%{name}-mailer.patch
 Patch1:		optflags.patch
-%{?with_jumbopatch:Patch1: http://www.openwall.com/john/contrib/%{name}-%{version}-jumbo-2.diff.gz}
+%{?with_jumbopatch:Patch1: http://www.openwall.com/john/contrib/%{name}-%{version}-jumbo-1.diff.gz}
 URL:		http://www.openwall.com/john/
 %{?with_jumbopatch:BuildRequires: openssl-devel >= 0.9.7}
 BuildRequires:	rpmbuild(macros) >= 1.213
@@ -59,7 +74,7 @@ Windows NT/2000/XP LM, a także kilka innych przy użyciu łat.
 %patch1 -p1
 %{?with_jumbopatch:%patch1 -p1}
 
-rm -f doc/INSTALL
+%{__rm} doc/INSTALL
 
 %build
 cd src
@@ -77,22 +92,46 @@ mv ../run/john ../run/john-non-mmx
 %{__make} clean
 %endif
 
+%if %{do_ssefb}
+%{__make} linux-x86-mmx \
+	CC="%{__cc}" \
+	OPTFLAGS="%{rpmcflags} -include defs.h %{?optmmxfb}"
+mv ../run/john ../run/john-non-sse
+%endif
+
 TARG=generic
-%ifarch %{ix86}
-	%if %{do_mmx}
-		TARG=linux-x86-mmx
+%ifarch %{x8664}
+	TARG=linux-x86-64%{?with_xop:-xop}%{!?with_xop:%{?with_avx:-avx}}
+%endif
+%ifarch	%{ix86}
+	%if %{with xop} || %{with avx}
+		TARG=linux-x86%{?with_xop:-xop}%{!?with_xop:%{?with_avx:-avx}}
 	%else
-		TARG=linux-x86-any
+		%if %{do_sse2}
+			TARG=linux-x86-sse2
+		%else
+			%if %{do_mmx}
+				TARG=linux-x86-mmx
+			%else
+				TARG=linux-x86-any
+			%endif
+		%endif
 	%endif
+%endif
+%ifarch ppc
+	TARG=linux-ppc32%{?with_altivec:-altivec}
+%endif
+%ifarch ppc64
+	TARG=linux-ppc64%{?with_altivec:-altivec}
 %endif
 %ifarch alpha
 	TARG=linux-alpha
 %endif
+%ifarch ia64
+	TARG=linux-ia64
+%endif
 %ifarch sparc sparcv9
 	TARG=linux-sparc
-%endif
-%ifarch %{x8664}
-	TARG=linux-x86-64
 %endif
 
 %{__make} $TARG \
@@ -105,8 +144,10 @@ install -d $RPM_BUILD_ROOT{%{_bindir},%{_datadir}/john}
 cp -a run/{*.conf,*.chr,*.lst} $RPM_BUILD_ROOT%{_datadir}/john
 install -p run/john $RPM_BUILD_ROOT%{_bindir}
 %if %{do_mmxfb}
-install -d $RPM_BUILD_ROOT%{_libdir}/john
-install -p run/john-non-mmx $RPM_BUILD_ROOT%{_libdir}/john
+install -D -p run/john-non-mmx $RPM_BUILD_ROOT%{_libdir}/john/john-non-mmx
+%endif
+%if %{do_ssefb}
+install -D -p run/john-non-sse $RPM_BUILD_ROOT%{_libdir}/john/john-non-sse
 %endif
 
 ln -sf john $RPM_BUILD_ROOT%{_bindir}/unafs
@@ -123,8 +164,12 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/unafs
 %attr(755,root,root) %{_bindir}/unique
 %attr(755,root,root) %{_bindir}/unshadow
-%if %{do_mmxfb}
+%if %{do_mmxfb} || %{do_ssefb}
 %dir %{_libdir}/john
+%if %{do_mmxfb}
 %attr(755,root,root) %{_libdir}/john/john-non-mmx
+%endif
+%if %{do_ssefb}
+%attr(755,root,root) %{_libdir}/john/john-non-sse
 %endif
 %{_datadir}/john
