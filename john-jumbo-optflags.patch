@@ -1,0 +1,19 @@
+--- john-1.7.8/src/Makefile~	2011-07-03 12:05:54.182086313 +0200
++++ john-1.7.8/src/Makefile	2011-07-03 12:06:36.707718399 +0200
+@@ -32,7 +32,7 @@
+ # icc with OpenMP (for make target linux-x86-64-icc)
+ #OMPFLAGS = -openmp
+ 
+-CFLAGS = -c -Wall -O2 -fomit-frame-pointer -I/usr/local/include $(OMPFLAGS)
++CFLAGS = -c $(OPTFLAGS) -fomit-frame-pointer -I/usr/local/include $(OMPFLAGS)
+ # -DHAVE_SKEY
+ ASFLAGS = -c $(OMPFLAGS)
+ LDFLAGS = -s -L/usr/local/lib -L/usr/local/ssl/lib -lcrypto -lssl -lm $(OMPFLAGS)
+@@ -41,6 +41,7 @@
+ LDFLAGS_MKV = -s -lm
+ OPT_NORMAL = -funroll-loops
+ OPT_INLINE = -finline-functions
++OPTFLAGS = -Wall -O2
+ 
+ JOHN_OBJS = \
+ 	$(MPIOBJ) \
