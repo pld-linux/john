@@ -183,4 +183,5 @@ rm -rf $RPM_BUILD_ROOT
 %if %{do_ssefb}
 %attr(755,root,root) %{_libdir}/john/john-non-sse
 %endif
+%endif
 %{_datadir}/john
