@@ -43,6 +43,8 @@ Source0:	http://www.openwall.com/john/g/%{name}-%{version}.tar.bz2
 Patch0:		%{name}-mailer.patch
 Patch1:		optflags.patch
 Patch2:		http://www.openwall.com/john/g/%{name}-%{version}-jumbo-2.diff.gz
+# Patch2-md5:	445bbcc9049a632c18359cb7a0fdfb27
+Patch3:		%{name}-jumbo-optflags.patch
 URL:		http://www.openwall.com/john/
 %{?with_jumbopatch:BuildRequires: openssl-devel >= 0.9.7}
 BuildRequires:	rpmbuild(macros) >= 1.213
@@ -82,8 +84,9 @@ Windows NT/2000/XP LM, a także kilka innych przy użyciu łat.
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
+%{!?with_jumbopatch:%patch1 -p1}
 %{?with_jumbopatch:%patch2 -p1}
+%{?with_jumbopatch:%patch3 -p1}
 
 %{__rm} doc/INSTALL
 
