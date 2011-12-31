@@ -42,8 +42,8 @@ Source0:	http://www.openwall.com/john/g/%{name}-%{version}.tar.bz2
 # Source0-md5:	45f54fc59386ecd67daaef9f19781d93
 Patch0:		%{name}-mailer.patch
 Patch1:		optflags.patch
-Patch2:		http://www.openwall.com/john/g/%{name}-1.7.8-jumbo-8.diff.gz
-# Patch2-md5:	96cb581fd8447f3f96614fd365896b07
+Patch2:		http://www.openwall.com/john/g/%{name}-1.7.9-jumbo-5.diff.gz
+# Patch2-md5:	68cacb612f20c71eed6c24cbaf28148a
 Patch3:		%{name}-jumbo-optflags.patch
 URL:		http://www.openwall.com/john/
 %{?with_jumbopatch:BuildRequires: openssl-devel >= 0.9.7}
