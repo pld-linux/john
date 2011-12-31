@@ -10,10 +10,10 @@
  ASFLAGS = -c $(OMPFLAGS)
  LDFLAGS = -s -L/usr/local/lib -L/usr/local/ssl/lib -lcrypto -lssl -lm $(OMPFLAGS)
 @@ -41,6 +41,7 @@
- LDFLAGS_MKV = -s -lm
  OPT_NORMAL = -funroll-loops
- OPT_INLINE = -finline-functions
+ # Remove the "-Os" if you're using an ancient version of gcc
+ OPT_INLINE = -Os -funroll-loops -finline-functions
 +OPTFLAGS = -Wall -O2
  
- JOHN_OBJS = \
- 	$(MPIOBJ) \
+ # Works with Solaris make, and GNU make
+ PLUGFORMATS_SRCS: sh =echo *_plug.c
