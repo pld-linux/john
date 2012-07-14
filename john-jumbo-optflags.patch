@@ -1,14 +1,14 @@
 --- john-1.7.8/src/Makefile~	2011-07-03 12:05:54.182086313 +0200
 +++ john-1.7.8/src/Makefile	2011-07-03 12:06:36.707718399 +0200
 @@ -32,7 +32,7 @@
- # icc with OpenMP (for make target linux-x86-64-icc)
- #OMPFLAGS = -openmp
- 
--CFLAGS = -c -Wall -O2 -fomit-frame-pointer -I/usr/local/include $(OMPFLAGS)
-+CFLAGS = -c $(OPTFLAGS) -fomit-frame-pointer -I/usr/local/include $(OMPFLAGS)
+ NSS_LDFLAGS = `pkg-config --libs nss`
+ endif
+
+-CFLAGS = -c -Wall -O2 -fomit-frame-pointer -I/usr/local/include $(HAVE_NSS) $(OMPFLAGS) $(JOHN_CFLAGS) $(AMDAPP)
++CFLAGS = -c $(OPTFLAGS) -fomit-frame-pointer -I/usr/local/include $(HAVE_NSS) $(OMPFLAGS) $(JOHN_CFLAGS) $(AMDAPP)
  # -DHAVE_SKEY
- ASFLAGS = -c $(OMPFLAGS)
- LDFLAGS = -s -L/usr/local/lib -L/usr/local/ssl/lib -lcrypto -lssl -lm $(OMPFLAGS)
+ # CFLAGS for use on the main john.c file only
+ CFLAGS_MAIN = $(CFLAGS)
 @@ -41,6 +41,7 @@
  OPT_NORMAL = -funroll-loops
  # Remove the "-Os" if you're using an ancient version of gcc
