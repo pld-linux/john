@@ -1,6 +1,6 @@
 #
 # Conditional build:
-%bcond_with	jumbopatch	# This patch integrates lots of contributed
+%bcond_without	jumbopatch	# This patch integrates lots of contributed
 				# patches adding support for over 30
 				# of additional hash types, and more.
 %bcond_with	avx		# use x86 AVX instructions
