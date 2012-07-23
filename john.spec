@@ -111,6 +111,7 @@ mv ../run/john ../run/john-non-mmx
 	CC="%{__cc}" \
 	OPTFLAGS="%{rpmcflags} -include defs.h %{?optmmxfb}"
 mv ../run/john ../run/john-non-sse
+%{__make} clean
 %endif
 
 TARG=generic
