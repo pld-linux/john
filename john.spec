@@ -35,7 +35,7 @@ Summary:	Password cracker
 Summary(pl.UTF-8):	Łamacz haseł
 Name:		john
 Version:	1.7.9
-Release:	2
+Release:	3
 License:	GPL v2
 Group:		Applications/System
 Source0:	http://www.openwall.com/john/g/%{name}-%{version}.tar.bz2
