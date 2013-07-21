@@ -45,6 +45,7 @@ Patch1:		optflags.patch
 Patch2:		http://www.openwall.com/john/g/%{name}-1.7.9-jumbo-7.diff.gz
 # Patch2-md5:	b953fcb7f743eeeb5f938a28c352b8ef
 Patch3:		%{name}-jumbo-optflags.patch
+Patch4:		no-inline.patch
 URL:		http://www.openwall.com/john/
 %{?with_jumbopatch:BuildRequires: openssl-devel >= 0.9.7}
 BuildRequires:	rpmbuild(macros) >= 1.213
@@ -87,6 +88,9 @@ Windows NT/2000/XP LM, a także kilka innych przy użyciu łat.
 %{!?with_jumbopatch:%patch1 -p1}
 %{?with_jumbopatch:%patch2 -p1}
 %{?with_jumbopatch:%patch3 -p1}
+%ifarch %{x8664}
+%patch4 -p1
+%endif
 
 %{__rm} doc/INSTALL
 
