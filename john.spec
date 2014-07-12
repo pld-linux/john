@@ -1,45 +1,51 @@
+# TODO
+# no jumbo patch for 1.8.0, try making our own from github?
+# https://github.com/magnumripper/JohnTheRipper/archive/%{version}/%{name}-%{version}-jumbo.tar.gz
 #
 # Conditional build:
-%bcond_without	jumbopatch	# This patch integrates lots of contributed
+%bcond_with	jumbopatch	# This patch integrates lots of contributed
 				# patches adding support for over 30
 				# of additional hash types, and more.
 %bcond_with	avx		# use x86 AVX instructions
 %bcond_with	xop		# use x86 XOP instructions
 %bcond_with	altivec		# use PPC Altivec instructions
-#
+
 %ifarch i586 i686 athlon pentium2 pentium3 pentium4
 %define do_mmx 1
 %else
-%define	do_mmx 0
+%define do_mmx 0
 %endif
-%ifarch	i686 athlon pentium4
-%define	do_sse2 1
+%ifarch i686 athlon pentium4
+%define do_sse2 1
 %else
-%define	do_sse2 0
+%define do_sse2 0
 %endif
 %ifarch i586 i686
 %define do_mmxfb 1
-%define	optmmxfb	-DCPU_FALLBACK=1
+%define optmmxfb -DCPU_FALLBACK=1
 %else
 %define do_mmxfb 0
 %undefine optmmxfb
 %endif
 %ifarch i686 athlon
-%define	do_ssefb 1
-%define	optssefb	-DCPU_FALLBACK=1
+%define do_ssefb 1
+%define optssefb -DCPU_FALLBACK=1
 %else
-%define	do_ssefb 0
-%define	optssefb
+%define do_ssefb 0
+%define optssefb %{nil}
 %endif
+
 Summary:	Password cracker
 Summary(pl.UTF-8):	Łamacz haseł
 Name:		john
-Version:	1.7.9
-Release:	3
+Version:	1.8.0
+Release:	0.1
 License:	GPL v2
 Group:		Applications/System
-Source0:	http://www.openwall.com/john/g/%{name}-%{version}.tar.bz2
-# Source0-md5:	45f54fc59386ecd67daaef9f19781d93
+Source0:	http://www.openwall.com/john/j/%{name}-%{version}.tar.xz
+# Source0-md5:	a4086df68f51778782777e60407f1869
+Source1:	http://www.openwall.com/john/j/%{name}-extra-20130529.tar.xz
+# Source1-md5:	bb191828e8cbfd5fe0779dff5d87d5f4
 Patch0:		%{name}-mailer.patch
 Patch1:		optflags.patch
 Patch2:		http://www.openwall.com/john/g/%{name}-1.7.9-jumbo-7.diff.gz
@@ -49,6 +55,8 @@ Patch4:		no-inline.patch
 URL:		http://www.openwall.com/john/
 %{?with_jumbopatch:BuildRequires: openssl-devel >= 0.9.7}
 BuildRequires:	rpmbuild(macros) >= 1.213
+BuildRequires:	tar >= 1:1.22
+BuildRequires:	xz
 Requires:	words
 %ifarch %{ix86} %{x8664}
 %if %{with xop}
@@ -83,14 +91,16 @@ na różnych uniksach, obsługiwane są także skróty Kerberos/AFS oraz
 Windows NT/2000/XP LM, a także kilka innych przy użyciu łat.
 
 %prep
-%setup -q
+%setup -q -a1
 %patch0 -p1
 %{!?with_jumbopatch:%patch1 -p1}
 %{?with_jumbopatch:%patch2 -p1}
 %{?with_jumbopatch:%patch3 -p1}
 %ifarch %{x8664}
-%patch4 -p1
+%{?with_jumbopatch:%patch4 -p1}
 %endif
+
+mv john-extra-*/*.chr run
 
 %{__rm} doc/INSTALL
 
