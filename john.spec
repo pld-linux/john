@@ -49,6 +49,8 @@ Source2:	http://www.openwall.com/john/j/%{name}-extra-20130529.tar.xz
 # Source2-md5:	bb191828e8cbfd5fe0779dff5d87d5f4
 Patch0:		%{name}-mailer.patch
 Patch1:		optflags.patch
+Patch2:		jumbo-optflags.patch
+Patch3:		jumbo-x32.patch
 URL:		http://www.openwall.com/john/
 %{?with_jumbo:BuildRequires: openssl-devel >= 0.9.7}
 BuildRequires:	rpmbuild(macros) >= 1.213
@@ -93,6 +95,8 @@ Windows NT/2000/XP LM, a także kilka innych przy użyciu łat.
 %setup -q -T %{?with_jumbo:-b1 -n %{name}-%{version}-jumbo-1} %{!?with_jumbo:-b0} -a2
 %patch0 -p1
 %{!?with_jumbo:%patch1 -p1}
+%{?with_jumbo:%patch2 -p1}
+%{?with_jumbo:%patch3 -p1}
 
 mv john-extra-*/*.chr run
 
@@ -102,6 +106,9 @@ mv john-extra-*/*.chr run
 cd src
 
 %if %{with jumbo}
+%ifarch x32
+ax_intel_x32=yes \
+%endif
 %configure
 %{__make}
 %else
@@ -172,11 +179,13 @@ install -d $RPM_BUILD_ROOT{%{_bindir},%{_datadir}/john}
 cp -a run/{*.conf,*.chr,*.lst} $RPM_BUILD_ROOT%{_datadir}/john
 install -p run/john $RPM_BUILD_ROOT%{_bindir}
 
+%if %{without jumbo}
 %if %{do_mmxfb}
 install -D -p run/john-non-mmx $RPM_BUILD_ROOT%{_libdir}/john/john-non-mmx
 %endif
 %if %{do_ssefb}
 install -D -p run/john-non-sse $RPM_BUILD_ROOT%{_libdir}/john/john-non-sse
+%endif
 %endif
 
 ln -sf john $RPM_BUILD_ROOT%{_bindir}/unafs
@@ -193,6 +202,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/unafs
 %attr(755,root,root) %{_bindir}/unique
 %attr(755,root,root) %{_bindir}/unshadow
+%if %{without jumbo}
 %if %{do_mmxfb} || %{do_ssefb}
 %dir %{_libdir}/john
 %if %{do_mmxfb}
@@ -200,6 +210,7 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 %if %{do_ssefb}
 %attr(755,root,root) %{_libdir}/john/john-non-sse
+%endif
 %endif
 %endif
 %{_datadir}/john

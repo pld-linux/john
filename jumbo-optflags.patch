@@ -1,0 +1,22 @@
+--- john-1.8.0-jumbo-1/src/Makefile.in~	2014-12-18 14:53:53.000000000 +0100
++++ john-1.8.0-jumbo-1/src/Makefile.in	2015-08-09 20:51:57.280926480 +0200
+@@ -151,7 +151,7 @@
+ NVCC = @NVCC@
+ CCBIN = @NVCC_GCC@
+ ifdef CCBIN
+-NVCC_FLAGS += @CPU_BITS@ -ccbin=$(CCBIN)
++NVCC_FLAGS += -ccbin=$(CCBIN)
+ endif
+ JOHN_OBJS += $(CUDA_OBJS)
+ endif
+--- john-1.8.0-jumbo-1/src/aes/aesni/Makefile.in~	2014-11-11 15:41:25.000000000 +0100
++++ john-1.8.0-jumbo-1/src/aes/aesni/Makefile.in	2015-08-09 20:53:39.198899789 +0200
+@@ -11,7 +11,7 @@
+ 	$(YASM) -D__@AESNI_OS@__ @YASM_OPTIONS@ $(RDTSC) -o $@
+ 
+ aesni.o: iaes_asm_interface.h  iaesni.h  intel_aes.c
+-	$(CC) $(CFLAGS) @CFLAGS_EXTRA@ -m@CPU_BIT_STR@ -c intel_aes.c -o $@
++	$(CC) $(CFLAGS) @CFLAGS_EXTRA@ -c intel_aes.c -o $@
+ 
+ all: iaesx.o rdtsc.o aesni.o
+ 
