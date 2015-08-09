@@ -44,6 +44,7 @@ Source0:	http://www.openwall.com/john/j/%{name}-%{version}.tar.xz
 Source1:	http://www.openwall.com/john/j/%{name}-%{version}-jumbo-1.tar.xz
 # Source1-md5:	1d6b22ec41a12cdcd62ad6eae3e77345
 Source2:	http://www.openwall.com/john/j/%{name}-extra-20130529.tar.xz
+# Source2-md5:	bb191828e8cbfd5fe0779dff5d87d5f4
 Patch0:		%{name}-mailer.patch
 Patch1:		optflags.patch
 URL:		http://www.openwall.com/john/
