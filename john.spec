@@ -62,8 +62,10 @@ Requires:	cpuinfo(xop)
 %if %{with xop} || %{with avx}
 Requires:	cpuinfo(avx)
 %endif
+%if %{without jumbo}
 %if %{do_sse2} && !%{do_ssefb}
 Requires:	cpuinfo(sse2)
+%endif
 %endif
 %endif
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
