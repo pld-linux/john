@@ -7,6 +7,7 @@
 %bcond_with	xop		# use x86 XOP instructions
 %bcond_with	altivec		# use PPC Altivec instructions
 
+%if %{without jumbo}
 %ifarch i586 i686 athlon pentium2 pentium3 pentium4
 %define do_mmx 1
 %else
@@ -30,6 +31,7 @@
 %else
 %define do_ssefb 0
 %define optssefb %{nil}
+%endif
 %endif
 
 Summary:	Password cracker
@@ -167,6 +169,7 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_bindir},%{_datadir}/john}
 cp -a run/{*.conf,*.chr,*.lst} $RPM_BUILD_ROOT%{_datadir}/john
 install -p run/john $RPM_BUILD_ROOT%{_bindir}
+
 %if %{do_mmxfb}
 install -D -p run/john-non-mmx $RPM_BUILD_ROOT%{_libdir}/john/john-non-mmx
 %endif
