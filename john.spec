@@ -1,9 +1,6 @@
-# TODO
-# no jumbo patch for 1.8.0, try making our own from github?
-# https://github.com/magnumripper/JohnTheRipper/archive/%{version}/%{name}-%{version}-jumbo.tar.gz
 #
 # Conditional build:
-%bcond_with	jumbopatch	# This patch integrates lots of contributed
+%bcond_without	jumbo		# Build community-enhanced version with lots of contributed
 				# patches adding support for over 30
 				# of additional hash types, and more.
 %bcond_with	avx		# use x86 AVX instructions
@@ -39,21 +36,18 @@ Summary:	Password cracker
 Summary(pl.UTF-8):	Łamacz haseł
 Name:		john
 Version:	1.8.0
-Release:	0.1
+Release:	1
 License:	GPL v2
 Group:		Applications/System
 Source0:	http://www.openwall.com/john/j/%{name}-%{version}.tar.xz
 # Source0-md5:	a4086df68f51778782777e60407f1869
-Source1:	http://www.openwall.com/john/j/%{name}-extra-20130529.tar.xz
-# Source1-md5:	bb191828e8cbfd5fe0779dff5d87d5f4
+Source1:	http://www.openwall.com/john/j/%{name}-%{version}-jumbo-1.tar.xz
+# Source1-md5:	1d6b22ec41a12cdcd62ad6eae3e77345
+Source2:	http://www.openwall.com/john/j/%{name}-extra-20130529.tar.xz
 Patch0:		%{name}-mailer.patch
 Patch1:		optflags.patch
-Patch2:		http://www.openwall.com/john/g/%{name}-1.7.9-jumbo-7.diff.gz
-# Patch2-md5:	b953fcb7f743eeeb5f938a28c352b8ef
-Patch3:		%{name}-jumbo-optflags.patch
-Patch4:		no-inline.patch
 URL:		http://www.openwall.com/john/
-%{?with_jumbopatch:BuildRequires: openssl-devel >= 0.9.7}
+%{?with_jumbo:BuildRequires: openssl-devel >= 0.9.7}
 BuildRequires:	rpmbuild(macros) >= 1.213
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	xz
@@ -91,14 +85,9 @@ na różnych uniksach, obsługiwane są także skróty Kerberos/AFS oraz
 Windows NT/2000/XP LM, a także kilka innych przy użyciu łat.
 
 %prep
-%setup -q -a1
+%setup -q -T %{?with_jumbo:-b1 -n %{name}-%{version}-jumbo-1} %{!?with_jumbo:-b0} -a2
 %patch0 -p1
-%{!?with_jumbopatch:%patch1 -p1}
-%{?with_jumbopatch:%patch2 -p1}
-%{?with_jumbopatch:%patch3 -p1}
-%ifarch %{x8664}
-%{?with_jumbopatch:%patch4 -p1}
-%endif
+%{!?with_jumbo:%patch1 -p1}
 
 mv john-extra-*/*.chr run
 
@@ -107,6 +96,10 @@ mv john-extra-*/*.chr run
 %build
 cd src
 
+%if %{with jumbo}
+%configure
+%{__make}
+%else
 cat > defs.h <<'EOF'
 #define	JOHN_SYSTEMWIDE 1
 #define	JOHN_SYSTEMWIDE_EXEC "%{_libdir}/john"
@@ -166,6 +159,7 @@ TARG=generic
 %{__make} $TARG \
 	CC="%{__cc}" \
 	OPTFLAGS='%{rpmcflags} -include defs.h %{?optmmxfb}'
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
