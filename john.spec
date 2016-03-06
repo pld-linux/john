@@ -6,8 +6,8 @@
 %bcond_without	jumbo		# Build community-enhanced version with lots of contributed
 				# patches adding support for over 30
 				# of additional hash types, and more.
-%bcond_without	gomp		# OpenMP support (in jumbo version)
 %bcond_without	opencl		# OpenCL support (in jumbo version)
+%bcond_without	openmp		# OpenMP support (in jumbo version)
 %bcond_with	avx		# use x86 AVX instructions
 %bcond_with	xop		# use x86 XOP instructions
 %bcond_with	altivec		# use PPC Altivec instructions
@@ -63,9 +63,9 @@ BuildRequires:	xz
 %if %{with jumbo}
 %{?with_opencl:BuildRequires:	OpenCL-devel}
 BuildRequires:	bzip2-devel
-%{?with_gomp:BuildRequires:	gcc >= 6:4.2}
+%{?with_openmp:BuildRequires:	gcc >= 6:4.2}
 BuildRequires:	gmp-devel
-%{?with_gomp:BuildRequires:	libgomp-devel}
+%{?with_openmp:BuildRequires:	libgomp-devel}
 # for SIPdump and vncpcap2john binaries, which are not packaged
 #BuildRequires:	libpcap-devel
 BuildRequires:	openssl-devel >= 0.9.7
@@ -130,7 +130,7 @@ ax_intel_x32=yes \
 %endif
 %configure \
 	%{!?with_opencl:--disable-opencl} \
-	%{!?with_gomp:--disable-openmp}
+	%{!?with_openmp:--disable-openmp}
 %{__make}
 %else
 cat > defs.h <<'EOF'
