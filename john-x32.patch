@@ -1,0 +1,96 @@
+--- JohnTheRipper-d73288b91d92f3bd670c18d3853ddaf0e02159f0/src/m4/jtr_utility_macros.m4~	2018-10-31 14:46:02.000000000 +0100
++++ JohnTheRipper-d73288b91d92f3bd670c18d3853ddaf0e02159f0/src/m4/jtr_utility_macros.m4	2018-11-04 13:18:54.692843591 +0100
+@@ -150,6 +150,30 @@
+ JTR_LIST_ADD_RESULT
+ ])
+ 
++dnl @synopsis SET_X32_INCLUDES
++dnl @summary check and set some x32 bit includes
++dnl This might be a Bad Idea[tm] if cross compiling.
++AC_DEFUN([JTR_SET_X32_INCLUDES],
++[
++  AC_MSG_CHECKING([additional paths (x32)])
++  ADD_LDFLAGS=""
++  ADD_CFLAGS=""
++if test -d /usr/local/libx32; then
++   ADD_LDFLAGS="$ADD_LDFLAGS -L/usr/local/libx32"
++fi
++if test -d /usr/libx32; then
++   ADD_LDFLAGS="$ADD_LDFLAGS -L/usr/libx32"
++fi
++if test -d /libx32; then
++   ADD_LDFLAGS="$ADD_LDFLAGS -L/libx32"
++fi
++JTR_LIST_ADD(CPPFLAGS, [$ADD_CFLAGS]) # no typo here
++jtr_list_add_result=""
++JTR_LIST_ADD(LDFLAGS, [$ADD_LDFLAGS])
++JTR_LIST_ADD(CFLAGS, [$ADD_CFLAGS])
++JTR_LIST_ADD_RESULT
++])
++
+ 
+ dnl @synopsis SET_NORMAL_SSL_INCLUDES(base path)
+ dnl @summary check and set include/library paths for OpenSSL
+--- JohnTheRipper-d73288b91d92f3bd670c18d3853ddaf0e02159f0.orig/src/configure.ac	2018-10-31 14:46:02.000000000 +0100
++++ JohnTheRipper-d73288b91d92f3bd670c18d3853ddaf0e02159f0/src/configure.ac	2018-11-04 13:18:54.656175005 +0100
+@@ -269,11 +269,11 @@
+ case "$host_cpu" in
+   ia64|mips64|mips64eb|mipseb64|mips64el|mipsel64|mips64*|powerpc64*|sparc64|x86_64)
+     CFLAGS_EX=""
+-    JTR_FLAG_CHECK_LINK([-m64], 1)
++    JTR_FLAG_CHECK_LINK([-mx32], 1)
+     if test "x${CFLAGS_EX}" != x ; then
+-      LDFLAGS="-m64 $LDFLAGS"
+-      CFLAGS="-m64 $CFLAGS"
+-      ASFLAGS="-m64 $ASFLAGS"
++      LDFLAGS="-mx32 $LDFLAGS"
++      CFLAGS="-mx32 $CFLAGS"
++      ASFLAGS="-mx32 $ASFLAGS"
+     fi
+     ;;
+   *)
+@@ -307,10 +307,33 @@
+    [AC_MSG_RESULT([32-bit])]
+ )
+ 
++dnl Check for x32 environment
++AC_MSG_CHECKING([for x32 environment])
++AC_LINK_IFELSE(
++   [AC_LANG_SOURCE(
++      [extern void exit(int);
++      int main() {
++      #if defined(__ILP32__) && defined(__x86_64__)
++          exit(0);}
++      #else
++          BORK!
++      #endif
++      ]
++   )]
++  ,[CPU_BITS="-mx32"]
++   [CPU_BIT_STR="32"]
++   [AC_MSG_RESULT([yes])]
++   ,
++)
++
+ if test "x${CPU_BITS}" = x-m64 ; then
+   JTR_SET_64_INCLUDES
+ fi
+ 
++if test "x${CPU_BITS}" = x-mx32 ; then
++	JTR_SET_X32_INCLUDES
++fi
++
+ dnl Checks for programs.
+ AC_PROG_LN_S
+ AC_PROG_GREP
+--- john-1.8.0-jumbo-1/src/aes/aesni/iaes_asm_interface.h~	2014-05-16 15:40:40.000000000 +0200
++++ john-1.8.0-jumbo-1/src/aes/aesni/iaes_asm_interface.h	2015-08-09 21:00:28.357476188 +0200
+@@ -56,7 +56,7 @@
+ #endif
+ 
+ #ifdef __linux__
+-#ifndef __LP64__
++#if !(defined(__LP64__) || defined(__ILP32__))
+ #define iEncExpandKey256 _iEncExpandKey256
+ #define iEncExpandKey192 _iEncExpandKey192
+ #define iEncExpandKey128 _iEncExpandKey128
