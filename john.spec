@@ -1,3 +1,7 @@
+#
+# TODO:
+# - investigate build-time vs runtime detection
+#
 # Conditional build:
 %bcond_without	opencl		# OpenCL support (in jumbo version)
 %bcond_without	openmp		# OpenMP support (in jumbo version)
