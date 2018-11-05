@@ -16,20 +16,20 @@ Version:	1.8.0
 Release:	2.%{snap}.1
 License:	GPL v2
 Group:		Applications/System
-Source0:	https://github.com/magnumripper/JohnTheRipper/archive/%{githash}/john-%{snap}.tar.gz
+Source0:	https://github.com/magnumripper/JohnTheRipper/archive/%{githash}/%{name}-%{snap}.tar.gz
 # Source0-md5:	a75c1108111c5181b471a9f4a9dab898
 Patch0:		%{name}-mailer.patch
 Patch1:		jumbo-optflags.patch
 Patch4:		%{name}-x32.patch
 URL:		http://www.openwall.com/john/
-BuildRequires:	rpmbuild(macros) >= 1.213
-BuildRequires:	autoconf >= 2.69
-BuildRequires:	tar >= 1:1.22
 %{?with_opencl:BuildRequires:	OpenCL-devel}
+BuildRequires:	autoconf >= 2.69
 BuildRequires:	bzip2-devel
 %{?with_openmp:BuildRequires:	gcc >= 6:4.2}
 BuildRequires:	gmp-devel
 %{?with_openmp:BuildRequires:	libgomp-devel}
+BuildRequires:	rpmbuild(macros) >= 1.213
+BuildRequires:	tar >= 1:1.22
 # for SIPdump and vncpcap2john binaries, which are not packaged
 #BuildRequires:	libpcap-devel
 BuildRequires:	openssl-devel >= 0.9.7
