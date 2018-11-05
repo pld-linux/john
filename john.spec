@@ -8,12 +8,13 @@
 
 %define		snap		20181101
 %define		githash		d73288b91d92f3bd670c18d3853ddaf0e02159f0
+%define		rel	2
 
 Summary:	Password cracker
 Summary(pl.UTF-8):	Łamacz haseł
 Name:		john
 Version:	1.8.0
-Release:	2.%{snap}.1
+Release:	2.%{snap}.%{rel}
 License:	GPL v2
 Group:		Applications/System
 Source0:	https://github.com/magnumripper/JohnTheRipper/archive/%{githash}/%{name}-%{snap}.tar.gz
