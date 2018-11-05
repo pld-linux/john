@@ -1,10 +1,10 @@
 #
 # TODO:
-# - investigate build-time vs runtime detection
+# - investigate build-time vs runtime CPU features detection
 #
 # Conditional build:
-%bcond_without	opencl		# OpenCL support (in jumbo version)
-%bcond_without	openmp		# OpenMP support (in jumbo version)
+%bcond_without	opencl		# OpenCL support
+%bcond_without	openmp		# OpenMP support
 
 %define		snap		20181101
 %define		githash		d73288b91d92f3bd670c18d3853ddaf0e02159f0
