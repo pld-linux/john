@@ -6,9 +6,9 @@
 %bcond_without	opencl		# OpenCL support
 %bcond_without	openmp		# OpenMP support
 
-%define		snap		20181101
-%define		githash		d73288b91d92f3bd670c18d3853ddaf0e02159f0
-%define		rel	2
+%define		snap		20190327
+%define		githash		4840892d68d14ad4a28f3e6f8c2e2941e9c0a2ad
+%define		rel	1
 
 Summary:	Password cracker
 Summary(pl.UTF-8):	Łamacz haseł
@@ -18,7 +18,7 @@ Release:	2.%{snap}.%{rel}
 License:	GPL v2
 Group:		Applications/System
 Source0:	https://github.com/magnumripper/JohnTheRipper/archive/%{githash}/%{name}-%{snap}.tar.gz
-# Source0-md5:	a75c1108111c5181b471a9f4a9dab898
+# Source0-md5:	0338a3184bf5598a5b027f3ee929ba24
 Patch0:		%{name}-mailer.patch
 Patch1:		jumbo-optflags.patch
 Patch4:		%{name}-x32.patch
