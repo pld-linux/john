@@ -1,6 +1,7 @@
---- john-1.7/run/mailer.orig	1998-12-02 00:08:50.000000000 +0100
-+++ john-1.7/run/mailer	2006-02-18 15:08:59.181310750 +0100
-@@ -10,10 +10,11 @@
+diff -urNp -x '*.orig' JohnTheRipper-af81c8de3ec1031c71307057d82fe1cd2bb8eb4b.org/run/mailer JohnTheRipper-af81c8de3ec1031c71307057d82fe1cd2bb8eb4b/run/mailer
+--- JohnTheRipper-af81c8de3ec1031c71307057d82fe1cd2bb8eb4b.org/run/mailer	2019-04-15 23:07:24.000000000 +0200
++++ JohnTheRipper-af81c8de3ec1031c71307057d82fe1cd2bb8eb4b/run/mailer	2021-10-06 23:03:54.122657094 +0200
+@@ -23,10 +23,11 @@ if [ $# -ne 1 ]; then
  fi
  
  # There's no need to mail users with these shells
@@ -14,7 +15,7 @@
  
  # Let's start
  $DIR/john -show "$1" -shells:$SHELLS | sed -n 's/:.*//p' |
-@@ -21,10 +22,13 @@
+@@ -34,10 +35,13 @@ $DIR/john -show "$1" -shells:$SHELLS | s
  	SENT=0
  
  	while read LOGIN; do
@@ -29,8 +30,8 @@
 +
  Hello!
  
- Your password for account "$LOGIN" is insecure. Please change it as soon
-@@ -32,6 +36,17 @@
+ Your password for account "$LOGIN" is insecure.  Please change it as soon
+@@ -45,6 +49,17 @@ as possible.
  
  Yours,
  	Password Checking Robot.
