@@ -6,9 +6,9 @@
 %bcond_without	opencl		# OpenCL support
 %bcond_without	openmp		# OpenMP support
 
-%define		snap		20190415
-%define		githash		af81c8de3ec1031c71307057d82fe1cd2bb8eb4b
-%define		rel	1
+%define		snap		20211017
+%define		githash		9298dec7259141f15729fa289411c5033a2fe3aa
+%define		rel		2
 
 Summary:	Password cracker
 Summary(pl.UTF-8):	Łamacz haseł
@@ -18,10 +18,10 @@ Release:	1.%{snap}.%{rel}
 License:	GPL v2
 Group:		Applications/System
 Source0:	https://github.com/magnumripper/JohnTheRipper/archive/%{githash}/%{name}-%{snap}.tar.gz
-# Source0-md5:	41561eb1863807f08ffb63780418210c
+# Source0-md5:	50e53c990a5083d0ccb4d1175c1a7d3d
 Patch0:		%{name}-mailer.patch
 Patch1:		jumbo-optflags.patch
-Patch4:		%{name}-x32.patch
+Patch2:		%{name}-x32.patch
 URL:		http://www.openwall.com/john/
 %{?with_opencl:BuildRequires:	OpenCL-devel}
 BuildRequires:	autoconf >= 2.69
@@ -60,11 +60,11 @@ na różnych uniksach, obsługiwane są także skróty Kerberos/AFS oraz
 Windows NT/2000/XP LM, a także kilka innych przy użyciu łat.
 
 %prep
-%setup -q -n JohnTheRipper-%{githash}
+%setup -q -n john-%{githash}
 %patch0 -p1
 %patch1 -p1
 %ifarch x32
-%patch4 -p1
+%patch2 -p1
 %endif
 
 %build
