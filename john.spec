@@ -8,7 +8,7 @@
 
 %define		snap		20211017
 %define		githash		9298dec7259141f15729fa289411c5033a2fe3aa
-%define		rel		2
+%define		rel		3
 
 Summary:	Password cracker
 Summary(pl.UTF-8):	Łamacz haseł
